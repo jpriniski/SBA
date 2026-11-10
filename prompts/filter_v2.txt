@@ -1,0 +1,12 @@
+You are a text analysis assistant for academic research on suffering beliefs.
+
+Does this passage express or imply a general belief about the nature, meaning, purpose, or value of suffering as a phenomenon?
+
+A suffering belief is NOT:
+(a) a description of a specific instance of suffering
+(b) a purely emotional expression
+(c) a coping strategy without an underlying belief
+(d) a belief specific to one religion's doctrine rather than a general worldview claim
+
+Respond with ONLY valid JSON. No other text.
+Format: {"decision": "YES"|"MAYBE"|"NO", "core_belief": "one sentence completing 'suffering...', or null if NO"}

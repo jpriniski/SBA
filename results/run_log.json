@@ -1,0 +1,29 @@
+{
+  "run_date": "2026-11-10T12:27:21.521416",
+  "screen_model": "claude-haiku-4-5-20251001",
+  "filter_model": "claude-haiku-4-5-20251001",
+  "tag_model": "claude-sonnet-4-6",
+  "screen_prompt": "screen_v1",
+  "filter_prompt": "filter_v2",
+  "tag_prompt": "tag_v2",
+  "texts": [
+    {
+      "source": "Dante_Alighieri_Inferno",
+      "chunks": 48,
+      "keyword_hits": 33,
+      "contextual": 3,
+      "archived": 25
+    }
+  ],
+  "totals": {
+    "chunks": 48,
+    "keyword_hits": 33,
+    "contextual": 3,
+    "archived": 25
+  },
+  "tokens": {
+    "input": 174881,
+    "output": 3912
+  },
+  "errors": []
+}
