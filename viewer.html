@@ -264,35 +264,55 @@ function parseCSV(raw) {
 
 // ── Labeled file parser ───────────────────────────────────────────────────────
 function parseLabeledFile(raw) {
-  const chunks={}, order=[];
-  const sections = raw.split(/\n(?=--- [\w]+ ---\n)/);
-  for (const sec of sections) {
-    const hm = sec.match(/^--- ([\w]+) ---\n/);
-    if (!hm) continue;
-    const id = hm[1];
-    const rest = sec.slice(hm[0].length);
-    const lines = rest.split('\n');
+  // Normalize line endings
+  raw = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const chunks = {}, order = [];
+
+  // Find every chunk header "--- chunk_id ---" on its own line
+  const headerRe = /^--- ([\w]+) ---$/gm;
+  const headers = [];
+  let m;
+  while ((m = headerRe.exec(raw)) !== null) {
+    headers.push({ id: m[1], pos: m.index + m[0].length }); // pos = after the ---
+  }
+
+  headers.forEach((h, i) => {
+    // Content runs from just after this header's \n to just before the next header's ---
+    const start = h.pos + 1; // skip the \n after "--- id ---"
+    const end   = i + 1 < headers.length
+      ? raw.lastIndexOf('\n', headers[i+1].pos - 2) // back up to before the \n before next ---
+      : raw.length;
+    const content = raw.slice(start, end);
+    const lines = content.split('\n');
+
+    // Blank line separates metadata from text
     let blankIdx = lines.findIndex(l => l.trim() === '');
-    if (blankIdx === -1) blankIdx = 0;
+    if (blankIdx === -1) blankIdx = lines.length;
+
     const meta = {};
     lines.slice(0, blankIdx).forEach(l => {
-      const m = l.match(/^([A-Z][A-Z ]+):\s+(.*)$/);
-      if (m) meta[m[1].trim()] = m[2].trim();
+      const mm = l.match(/^([A-Z][A-Z ]+):\s+(.*)$/);
+      if (mm) meta[mm[1].trim()] = mm[2].trim();
     });
+
+    // Text runs from after blank line until the 80-dash separator
     const textLines = [];
     for (let j = blankIdx + 1; j < lines.length; j++) {
-      if (/^-{20,}$/.test(lines[j].trim())) break;
+      if (/^-{20,}$/.test(lines[j])) break;
       textLines.push(lines[j]);
     }
-    order.push(id);
-    chunks[id] = {
+
+    order.push(h.id);
+    chunks[h.id] = {
       text: textLines.join('\n').trim(),
       index: order.length - 1,
       screen: meta['SCREEN'] || '',
       filter: meta['FILTER'] || 'N/A',
       keyword: meta['KEYWORD'] || '',
     };
-  }
+  });
+
+  console.log(`[viewer] parsed ${order.length} chunks from labeled file`);
   return { chunks, order };
 }
 
@@ -623,6 +643,7 @@ function renderCards() {
     ctxBtn.addEventListener("click", () => {
       ctxBtn.classList.toggle("open");
       const body = document.getElementById(`ctx-${r.chunk_id}`);
+      if (!body) return;
       body.classList.toggle("open");
       if (body.classList.contains("open") && !body.dataset.built) {
         body.dataset.built = "1";
@@ -636,14 +657,34 @@ function renderCards() {
 
 // ── Build context panel ───────────────────────────────────────────────────────
 function buildContextPanel(container, chunkId) {
+  // Find the CSV row for this chunk to show its full excerpt as fallback
+  const row = S.rows.find(r => r.chunk_id === chunkId);
+  const excerptFallback = row ? `
+    <div class="ctx-chunk current">
+      <div class="ctx-chunk-hdr">
+        <span class="ctx-cid">${esc(chunkId)}</span>
+        <span class="ctx-badge arch">CURRENT (excerpt only)</span>
+      </div>
+      <div class="ctx-chunk-txt">${esc(row.text_excerpt || '')}</div>
+    </div>` : "";
+
   if (!S.labeled) {
-    container.innerHTML = `<div class="ctx-not-loaded">Load the labeled .txt file (via "+ Load context file" in the header) to see surrounding chunks.</div>`;
+    container.innerHTML = `
+      <div class="ctx-not-loaded" style="padding:8px 14px 4px">
+        Load the <strong>_labeled.txt</strong> file (header → "+ Load context file") to see surrounding chunks.
+      </div>
+      ${excerptFallback}`;
     return;
   }
   const { chunks, order } = S.labeled;
   const cur = chunks[chunkId];
   if (!cur) {
-    container.innerHTML = `<div class="ctx-not-loaded">Chunk not found in labeled file.</div>`;
+    console.warn(`[viewer] chunk "${chunkId}" not found in labeled file. Available: ${order.slice(0,3).join(', ')}...`);
+    container.innerHTML = `
+      <div class="ctx-not-loaded" style="padding:8px 14px 4px">
+        Chunk not found in loaded file — make sure you loaded the correct <em>_labeled.txt</em>.
+      </div>
+      ${excerptFallback}`;
     return;
   }
   const idx = cur.index;
@@ -720,10 +761,27 @@ function loadCSV(file) {
 function loadLabeled(file) {
   const reader = new FileReader();
   reader.onload = e => {
-    S.labeled = parseLabeledFile(e.target.result);
-    document.getElementById("ctx-btn").classList.add("loaded");
-    document.getElementById("ctx-btn").title = `Loaded: ${file.name} (${S.labeled.order.length} chunks)`;
-    // Reset any open context panels so they rebuild with the new data
+    try {
+      S.labeled = parseLabeledFile(e.target.result);
+      const n = S.labeled.order.length;
+      const btn = document.getElementById("ctx-btn");
+      if (n === 0) {
+        btn.textContent = "⚠ No chunks found";
+        btn.style.borderColor = "#c0392b";
+        btn.style.color = "#c0392b";
+        console.error("[viewer] labeled file parsed but found 0 chunks — check file format");
+      } else {
+        btn.classList.add("loaded");
+        btn.childNodes[0].textContent = `✓ ${n} chunks loaded`;
+        btn.title = `Loaded: ${file.name} (${n} chunks)`;
+      }
+    } catch(err) {
+      console.error("[viewer] error parsing labeled file:", err);
+      const btn = document.getElementById("ctx-btn");
+      btn.textContent = "⚠ Parse error";
+      btn.style.color = "#c0392b";
+    }
+    // Rebuild any open context panels with the new data
     document.querySelectorAll(".ctx-body[data-built]").forEach(el => {
       delete el.dataset.built;
       if (el.classList.contains("open")) buildContextPanel(el, el.id.replace("ctx-",""));
