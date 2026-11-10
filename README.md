@@ -1,8 +1,5 @@
 # Suffering Beliefs Pilot — AI Extraction Pipeline
 
-**Project:** Suffering Beliefs Framework (SBF), SCF Lab, Duke University  
-**Grant:** John Templeton Foundation FR#63879  
-**Protocol reference:** `SBF_AI_Text_Analysis_Protocol_v2.docx` (August 2026)
 
 ---
 
