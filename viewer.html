@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suffering Beliefs — Annotation Viewer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f3ef;color:#222;font-size:14px}
+
+/* ── Load screen ── */
+#load-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px;text-align:center}
+#load-screen.drag-over{background:#e8e6e0}
+#load-screen h1{font-size:1.4rem;font-weight:600}
+#load-screen p{color:#888;font-size:.88rem;max-width:400px}
+.load-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:6px;font-size:.84rem;cursor:pointer;border:none;font-family:inherit}
+.load-btn-primary{background:#2c2c2c;color:#fff}.load-btn-primary:hover{background:#444}
+input[type=file]{display:none}
+#load-err{font-size:.78rem;color:#c0392b}
+
+/* ── App ── */
+#app{display:none}
+#app.on{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── Header ── */
+.top-bar{position:sticky;top:0;z-index:200;background:#fff;border-bottom:1px solid #ddd;padding:0 16px;height:46px;display:flex;align-items:center;gap:10px}
+.top-bar h1{font-size:.9rem;font-weight:600;white-space:nowrap}
+.top-bar .sep{flex:1}
+.meta{display:flex;gap:14px;align-items:center}
+.meta span{font-size:.74rem;color:#999}
+.meta span strong{color:#444}
+.ctx-load-btn{font-size:.73rem;padding:4px 10px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#666;cursor:pointer;white-space:nowrap}
+.ctx-load-btn:hover{background:#f5f5f5}
+.ctx-load-btn.loaded{border-color:#27ae60;color:#27ae60}
+
+/* ── Layout ── */
+.main{display:flex;flex:1;align-items:flex-start}
+
+/* ── Sidebar ── */
+#sidebar{width:280px;min-width:280px;position:sticky;top:46px;height:calc(100vh - 46px);overflow-y:auto;background:#fff;border-right:1px solid #e2dfd8;padding:14px 12px;display:flex;flex-direction:column;gap:20px}
+.chart-sec h3{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:#bbb;margin-bottom:8px}
+.chart-hint{font-size:.67rem;color:#ccc;font-style:italic;margin-top:3px}
+.chart-svg{display:block;width:100%;overflow:visible}
+
+/* ── Cards column ── */
+.cards-col{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* ── Filter bar ── */
+.filter-bar{position:sticky;top:46px;z-index:100;background:#faf9f6;border-bottom:1px solid #e8e5de;padding:7px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#search{padding:5px 10px;border:1px solid #ccc;border-radius:5px;font-size:.82rem;width:195px;font-family:inherit}
+.chips-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:500;color:#fff}
+.chip button{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:.82rem;line-height:1;padding:0 1px}
+.chip button:hover{color:#fff}
+.chip.con{background:#555}
+#clear-btn{font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#777;cursor:pointer;display:none}
+#clear-btn.on{display:block}
+#result-ct{font-size:.73rem;color:#bbb;white-space:nowrap;margin-left:auto}
+
+/* ── Cards ── */
+#cards{padding:13px 14px 40px;display:flex;flex-direction:column;gap:11px}
+.no-results{text-align:center;color:#ccc;font-size:.88rem;padding:60px 40px}
+
+.card{background:#fff;border:1px solid #e2dfd8;border-radius:8px;overflow:hidden}
+.card-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.cid{font-size:.67rem;color:#ccc;font-family:monospace;padding-top:1px}
+.badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.badge{font-size:.65rem;padding:2px 6px;border-radius:3px;background:#f0ede6;color:#777}
+.badge.kw{background:#fef3cd;color:#7a5c00}
+.badge.hi{background:#e8f5e8;color:#2a6a2a}
+.badge.med{background:#fff8e0;color:#7a6000}
+.badge.lo{background:#fce8e8;color:#8a2020}
+
+.belief{font-size:.86rem;font-style:italic;color:#333;line-height:1.55;border-left:3px solid #e0ddd7;padding-left:10px}
+
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tc{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.68rem;font-weight:500;color:#fff;cursor:pointer;border:2.5px solid transparent}
+.tc:hover{opacity:.85}
+.tc.ring{border-color:rgba(0,0,0,.25)}
+
+.cons{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.con-lbl{font-size:.67rem;color:#ccc}
+.con-chip{font-size:.66rem;padding:2px 6px;border-radius:3px;background:#f0ede6;color:#555;cursor:pointer}
+.con-chip:hover{background:#e0ddd6}
+.con-chip.sel{background:#555;color:#fff}
+
+.excerpt{font-size:.79rem;color:#555;line-height:1.65;background:#fafaf8;border-radius:4px;padding:7px 9px;white-space:pre-wrap;word-break:break-word}
+.more-btn{background:none;border:none;color:#bbb;font-size:.69rem;cursor:pointer;text-decoration:underline dotted;padding:1px 0;font-family:inherit}
+
+.nc-box{font-size:.74rem;background:#fffbec;border:1px solid #f0d070;border-radius:4px;padding:6px 9px;color:#6b4c00}
+.nc-box strong{font-weight:600}
+
+/* ── Context panel ── */
+.ctx-toggle{width:100%;text-align:left;padding:7px 14px;background:#fafaf8;border:none;border-top:1px solid #eee;font-size:.7rem;color:#aaa;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+.ctx-toggle:hover{background:#f5f4f0;color:#777}
+.ctx-arrow{display:inline-block;transition:transform .15s}
+.ctx-toggle.open .ctx-arrow{transform:rotate(90deg)}
+.ctx-body{display:none;border-top:1px solid #eee}
+.ctx-body.open{display:block}
+.ctx-chunk{border-bottom:1px solid #f0ede8}
+.ctx-chunk:last-child{border-bottom:none}
+.ctx-chunk-hdr{padding:5px 14px;font-size:.68rem;display:flex;align-items:center;gap:7px;background:#fafaf8;color:#888}
+.ctx-cid{color:#ccc;font-family:monospace}
+.ctx-badge{padding:1px 5px;border-radius:2px;background:#eee;color:#777;font-size:.62rem}
+.ctx-badge.arch{background:#e8f5e8;color:#2a6a2a}
+.ctx-badge.maybe{background:#fffbe0;color:#7a6000}
+.ctx-chunk.current .ctx-chunk-hdr{background:#eef3fb}
+.ctx-chunk-txt{font-size:.76rem;color:#555;line-height:1.6;padding:7px 14px;white-space:pre-wrap;word-break:break-word;max-height:170px;overflow-y:auto}
+.ctx-chunk.current .ctx-chunk-txt{background:#f8faff;max-height:none}
+.ctx-not-loaded{font-size:.76rem;color:#ccc;font-style:italic;padding:9px 14px}
+
+/* ── Tooltip ── */
+#tip{position:fixed;z-index:9999;pointer-events:none;display:none;max-width:260px;background:#1a1a1a;color:#eee;font-size:.75rem;line-height:1.5;padding:7px 10px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#tip strong{color:#fff;display:block;margin-bottom:2px;font-size:.77rem}
+</style>
+</head>
+<body>
+
+<!-- Load screen -->
+<div id="load-screen">
+  <h1>Suffering Beliefs — Annotation Viewer</h1>
+  <p>Drag a <code>pilot_archive.csv</code> onto this page, or click to load it.</p>
+  <label class="load-btn load-btn-primary">
+    Open archive CSV
+    <input type="file" id="csv-file" accept=".csv">
+  </label>
+  <div id="load-err"></div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <header class="top-bar">
+    <h1 id="run-title">Annotation Viewer</h1>
+    <div class="sep"></div>
+    <div class="meta">
+      <span id="m-date"></span>
+      <span id="m-model"></span>
+      <span id="m-counts"></span>
+    </div>
+    <label class="ctx-load-btn" id="ctx-btn" title="Load the _labeled.txt file to enable full passage context">
+      + Load context file
+      <input type="file" id="ctx-file" accept=".txt">
+    </label>
+  </header>
+
+  <div class="main">
+    <!-- Sidebar: charts -->
+    <aside id="sidebar">
+      <div class="chart-sec">
+        <h3>Belief Tags</h3>
+        <svg id="ch-tags" class="chart-svg"></svg>
+        <div class="chart-hint">Click bar to filter · updates construct chart</div>
+      </div>
+      <div class="chart-sec">
+        <h3>Construct Dimensions</h3>
+        <svg id="ch-cons" class="chart-svg"></svg>
+        <div class="chart-hint">Shows constructs within selected tags · click to filter</div>
+      </div>
+      <div class="chart-sec">
+        <h3>Tag Co-occurrence</h3>
+        <svg id="ch-cooc" class="chart-svg"></svg>
+        <div class="chart-hint">Click cell to filter both tags simultaneously</div>
+      </div>
+    </aside>
+
+    <!-- Cards column -->
+    <div class="cards-col">
+      <div class="filter-bar">
+        <input type="text" id="search" placeholder="Search beliefs, text, keywords…">
+        <div class="chips-row" id="chips"></div>
+        <button id="clear-btn">Clear filters</button>
+        <span id="result-ct"></span>
+      </div>
+      <div id="cards"></div>
+    </div>
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+// ── Tag metadata ───────────────────────────────────────────────────────────────
+const TAGS = {
+  0:{label:"None / New",        short:"New",         color:"#2c3e50"},
+  1:{label:"Punishment",        short:"Punishment",  color:"#c0392b"},
+  2:{label:"Teacher/growth",    short:"Teacher",     color:"#27ae60"},
+  3:{label:"Craving/attachment",short:"Craving",     color:"#8e44ad"},
+  4:{label:"Shared condition",  short:"Shared",      color:"#2980b9"},
+  5:{label:"Call to compassion",short:"Compassion",  color:"#d35400"},
+  6:{label:"Acceptance",        short:"Acceptance",  color:"#16a085"},
+  7:{label:"Mystery",           short:"Mystery",     color:"#7f8c8d"},
+};
+
+// ── Tooltip content ───────────────────────────────────────────────────────────
+const TAG_TIPS = {
+  0: {h:"None / New candidate", b:"The passage expresses a belief about suffering that doesn't fit existing categories — a new label was proposed."},
+  1: {h:"Punishment / Consequence", b:"Suffering results from wrongdoing or violation of moral/natural order. It is deserved consequence or just retribution."},
+  2: {h:"Teacher / Growth", b:"Suffering instructs, refines character, or builds resilience. It has a developmental or redemptive purpose."},
+  3: {h:"Craving / Attachment", b:"Suffering arises from desire, clinging, or resistance to what is. Freedom comes through releasing attachment."},
+  4: {h:"Shared condition", b:"Suffering is the universal human lot — everyone suffers and we are united by this shared condition."},
+  5: {h:"Call to compassion", b:"Suffering obligates care, solidarity, and action from others. It is a call to respond with compassion."},
+  6: {h:"Acceptance / Equanimity", b:"Suffering is to be met with calm acceptance or non-resistance rather than struggle or avoidance."},
+  7: {h:"Mystery / Unknowable", b:"Suffering's meaning, cause, or purpose is beyond human comprehension — it resists explanation."},
+};
+const CON_TIPS = {
+  prevalence:        {h:"Prevalence", b:"How common or universal suffering is — is it rare and individual, or the inevitable lot of all humans?"},
+  controllability:   {h:"Controllability", b:"Whether suffering can be avoided, reduced, or controlled — or whether it is inescapable and inevitable."},
+  evaluation:        {h:"Evaluation", b:"Whether suffering is judged as harmful, beneficial, morally neutral, or some complex mixture of these."},
+  cause:             {h:"Cause", b:"What causes suffering — personal choices, random chance, structural forces, divine will, or natural law?"},
+  consequences:      {h:"Consequences", b:"What suffering leads to — growth, decline, transformation, moral insight, or nothing at all."},
+  meaning:           {h:"Meaning", b:"Whether suffering carries meaning, purpose, or value beyond the immediate experience of pain."},
+  fairness:          {h:"Fairness", b:"Whether suffering is deserved, just, and equitable — or arbitrary, unjust, and undeserved."},
+  responsibility:    {h:"Responsibility", b:"Who bears responsibility for suffering — the individual, society, God, fate, or some combination?"},
+  helpful_responses: {h:"Helpful responses", b:"How one ought to respond to suffering — endure it, resist it, help those who suffer, or accept it."},
+  punishment:        {h:"Punishment (construct)", b:"Relates to the idea that suffering serves as retribution or consequence for moral transgression."},
+};
+const CONF_TIPS = {
+  HIGH:   {h:"High confidence", b:"The model is highly confident this passage expresses a general belief about suffering."},
+  MEDIUM: {h:"Medium confidence", b:"The model has moderate confidence in this classification — human review recommended."},
+  LOW:    {h:"Low confidence", b:"The model is uncertain about this classification — prioritize for human review."},
+};
+const TRIGGER_TIPS = {
+  keyword:    {h:"Keyword trigger", b:"This passage was flagged because it contains a direct keyword match (e.g. 'suffer', 'pain', 'anguish', 'torment')."},
+  contextual: {h:"Contextual trigger", b:"Flagged by the screening model as likely expressing a suffering belief — no direct keyword match was found."},
+};
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const S = {
+  rows: [],
+  labeled: null,  // { chunks: {id:{text,index,screen,filter,keyword}}, order:[] }
+  tagF: new Set(),
+  conF: new Set(),
+  q: "",
+};
+
+// ── CSV parser (handles quoted fields) ────────────────────────────────────────
+function parseCSV(raw) {
+  const rows = []; let i = 0, n = raw.length;
+  function field() {
+    if (raw[i] === '"') {
+      i++; let v = "";
+      while (i < n) {
+        if (raw[i]==='"' && raw[i+1]==='"'){v+='"';i+=2;}
+        else if (raw[i]==='"'){i++;break;}
+        else v+=raw[i++];
+      }
+      return v;
+    }
+    let v="";
+    while(i<n && raw[i]!==',' && raw[i]!=='\n' && raw[i]!=='\r') v+=raw[i++];
+    return v;
+  }
+  function line(){
+    const f=[];
+    while(i<n && raw[i]!=='\n' && raw[i]!=='\r'){f.push(field());if(i<n&&raw[i]===',')i++;}
+    while(i<n&&(raw[i]==='\n'||raw[i]==='\r'))i++;
+    return f;
+  }
+  const hdr=line();
+  while(i<n){const v=line();if(v.length<2)continue;const o={};hdr.forEach((h,j)=>o[h]=(v[j]||"").trim());rows.push(o);}
+  return rows;
+}
+
+// ── Labeled file parser ───────────────────────────────────────────────────────
+function parseLabeledFile(raw) {
+  const chunks={}, order=[];
+  const sections = raw.split(/\n(?=--- [\w]+ ---\n)/);
+  for (const sec of sections) {
+    const hm = sec.match(/^--- ([\w]+) ---\n/);
+    if (!hm) continue;
+    const id = hm[1];
+    const rest = sec.slice(hm[0].length);
+    const lines = rest.split('\n');
+    let blankIdx = lines.findIndex(l => l.trim() === '');
+    if (blankIdx === -1) blankIdx = 0;
+    const meta = {};
+    lines.slice(0, blankIdx).forEach(l => {
+      const m = l.match(/^([A-Z][A-Z ]+):\s+(.*)$/);
+      if (m) meta[m[1].trim()] = m[2].trim();
+    });
+    const textLines = [];
+    for (let j = blankIdx + 1; j < lines.length; j++) {
+      if (/^-{20,}$/.test(lines[j].trim())) break;
+      textLines.push(lines[j]);
+    }
+    order.push(id);
+    chunks[id] = {
+      text: textLines.join('\n').trim(),
+      index: order.length - 1,
+      screen: meta['SCREEN'] || '',
+      filter: meta['FILTER'] || 'N/A',
+      keyword: meta['KEYWORD'] || '',
+    };
+  }
+  return { chunks, order };
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const parseTags = s => (s||"").split(",").map(x=>parseInt(x.trim())).filter(n=>!isNaN(n));
+const parseList = s => (s||"").split(",").map(x=>x.trim()).filter(Boolean);
+const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function mkel(tag, attrs={}, style={}) {
+  const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  Object.assign(e.style, style);
+  return e;
+}
+
+// ── Tooltip helpers ───────────────────────────────────────────────────────────
+const TT = document.getElementById("tip");
+function showTip(e, tipObj) {
+  if (!tipObj) return;
+  TT.innerHTML = (tipObj.h ? `<strong>${esc(tipObj.h)}</strong>` : "") + esc(tipObj.b || tipObj);
+  TT.style.display = "block";
+  moveTip(e);
+}
+function moveTip(e) {
+  const pad = 14, w = TT.offsetWidth, h = TT.offsetHeight;
+  let x = e.clientX + pad, y = e.clientY - h/2;
+  if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
+  if (y < 8) y = 8;
+  if (y + h > window.innerHeight - 8) y = window.innerHeight - h - 8;
+  TT.style.left = x + "px";
+  TT.style.top  = y + "px";
+}
+function hideTip() { TT.style.display = "none"; }
+document.addEventListener("mousemove", e => { if (TT.style.display==="block") moveTip(e); });
+
+// data-tip delegation on cards area
+document.addEventListener("mouseover", e => {
+  const el = e.target.closest("[data-tip]");
+  if (el) { try { showTip(e, JSON.parse(el.dataset.tip)); } catch(_){} }
+});
+document.addEventListener("mouseout", e => {
+  if (e.target.closest("[data-tip]")) hideTip();
+});
+
+// ── Cross-filtered row sets ───────────────────────────────────────────────────
+function getRows({noTag=false, noCon=false}={}) {
+  return S.rows.filter(r => {
+    if (!noTag && S.tagF.size > 0 && !parseTags(r.tags).some(t=>S.tagF.has(t))) return false;
+    if (!noCon && S.conF.size > 0 && !parseList(r.constructs).some(c=>S.conF.has(c))) return false;
+    if (S.q) {
+      const hay=[r.core_belief,r.text_excerpt,r.keyword,r.tag_names,r.constructs,r.new_candidate_label].join(" ").toLowerCase();
+      if (!hay.includes(S.q)) return false;
+    }
+    return true;
+  });
+}
+
+// ── Bar chart (SVG) ───────────────────────────────────────────────────────────
+function drawBarChart(svgNode, items, selSet, colorFn, onToggle, tipFn) {
+  svgNode.innerHTML = "";
+  if (!items.length) return;
+  const LW=115, BW=98, BH=15, GAP=5, W=LW+BW+22, H=items.length*(BH+GAP)+2;
+  svgNode.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svgNode.setAttribute("height", H);
+  const max = Math.max(...items.map(d=>d.count), 1);
+  const hasFilter = selSet.size > 0;
+  items.forEach((d,i) => {
+    const y = i*(BH+GAP);
+    const bw = Math.max(2, (d.count/max)*BW);
+    const sel = selSet.has(d.key);
+    const dim = hasFilter && !sel;
+    const g = svgNode.appendChild(mkel("g",{"transform":`translate(0,${y})`}));
+    g.style.cursor = "pointer";
+    g.style.opacity = dim ? "0.3" : "1";
+    // label
+    const lbl = g.appendChild(mkel("text",{x:LW-4,y:BH/2+4,"text-anchor":"end","font-size":"10","font-family":"-apple-system,sans-serif","fill":sel?"#111":"#666"}));
+    if(sel) lbl.style.fontWeight="600";
+    lbl.textContent = d.label;
+    // bar
+    const bar = g.appendChild(mkel("rect",{x:LW,y:2,width:bw,height:BH-4,rx:3,fill:colorFn(d)}));
+    if(sel) bar.setAttribute("stroke", colorFn(d)), bar.setAttribute("stroke-width","1.5");
+    // count
+    const ct = g.appendChild(mkel("text",{x:LW+bw+4,y:BH/2+4,"font-size":"9.5","font-family":"-apple-system,sans-serif","fill":"#bbb"}));
+    ct.textContent = d.count;
+    g.addEventListener("mouseenter", e =>{ if(!sel) g.style.opacity="0.7"; bar.setAttribute("opacity","0.85"); if(tipFn) showTip(e, tipFn(d)); });
+    g.addEventListener("mousemove",  e =>{ if(tipFn) moveTip(e); });
+    g.addEventListener("mouseleave",  ()=>{ g.style.opacity = dim?"0.3":"1"; bar.removeAttribute("opacity"); hideTip(); });
+    g.addEventListener("click",()=>onToggle(d.key));
+  });
+}
+
+// ── Co-occurrence heatmap (SVG) ───────────────────────────────────────────────
+function drawCooccur(svgNode, rows) {
+  svgNode.innerHTML = "";
+  const allTags = [...new Set(S.rows.flatMap(r=>parseTags(r.tags)))].sort((a,b)=>a-b);
+  const n = allTags.length;
+  if (n < 2) { svgNode.setAttribute("height",0); return; }
+
+  // Build matrix from search-only filtered rows
+  const mat = {};
+  rows.forEach(r => {
+    const rt = parseTags(r.tags);
+    rt.forEach(t1 => rt.forEach(t2 => {
+      if (t1 !== t2) { const k=`${t1},${t2}`; mat[k]=(mat[k]||0)+1; }
+    }));
+  });
+  const maxV = Math.max(...Object.values(mat), 1);
+
+  const CS = Math.max(18, Math.floor((256 - 60) / n)); // cell size
+  const LP = 56, TP = 60; // left pad, top pad
+  const W = LP + n*CS, H = TP + n*CS;
+  svgNode.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svgNode.setAttribute("height", H);
+
+  // Column labels (rotated)
+  allTags.forEach((t,j) => {
+    const lbl = svgNode.appendChild(mkel("text",{
+      transform:`translate(${LP+j*CS+CS/2},${TP-5}) rotate(-40)`,
+      "text-anchor":"start","font-size":"8.5","font-family":"-apple-system,sans-serif","fill":"#888"
+    }));
+    lbl.textContent = TAGS[t]?.short || `T${t}`;
+  });
+  // Row labels
+  allTags.forEach((t,i) => {
+    const lbl = svgNode.appendChild(mkel("text",{
+      x:LP-4, y:TP+i*CS+CS/2+3,
+      "text-anchor":"end","font-size":"8.5","font-family":"-apple-system,sans-serif","fill":"#888"
+    }));
+    lbl.textContent = TAGS[t]?.short || `T${t}`;
+  });
+
+  // Cells
+  allTags.forEach((t1,i) => {
+    allTags.forEach((t2,j) => {
+      if (t1 === t2) {
+        const r = svgNode.appendChild(mkel("rect",{x:LP+j*CS,y:TP+i*CS,width:CS-1,height:CS-1,rx:2,fill:"#f5f5f5"}));
+        return;
+      }
+      const count = mat[`${t1},${t2}`] || 0;
+      const alpha = count > 0 ? 0.1 + 0.9*(count/maxV) : 0;
+      const isBothSel = S.tagF.has(t1) && S.tagF.has(t2);
+      const cell = svgNode.appendChild(mkel("g",{}));
+      cell.style.cursor = count > 0 ? "pointer" : "default";
+
+      const fill = count > 0 ? `rgba(41,128,185,${alpha.toFixed(2)})` : "#f9f9f9";
+      const rect = cell.appendChild(mkel("rect",{
+        x:LP+j*CS, y:TP+i*CS, width:CS-1, height:CS-1, rx:2, fill,
+      }));
+      if (isBothSel) { rect.setAttribute("stroke","#c0392b"); rect.setAttribute("stroke-width","2"); }
+
+      if (count > 0) {
+        const txt = cell.appendChild(mkel("text",{
+          x:LP+j*CS+CS/2, y:TP+i*CS+CS/2+3,
+          "text-anchor":"middle","font-size":"8","font-family":"-apple-system,sans-serif",
+          "fill": alpha > 0.55 ? "#fff" : "#555", "pointer-events":"none"
+        }));
+        txt.textContent = count;
+        const tip2 = {h:`${TAGS[t1]?.short} + ${TAGS[t2]?.short}`, b:`${count} passage${count===1?"":"s"} express both beliefs. Click to filter.`};
+        cell.addEventListener("mouseenter", e =>{ rect.setAttribute("opacity","0.8"); showTip(e, tip2); });
+        cell.addEventListener("mousemove",  e => moveTip(e));
+        cell.addEventListener("mouseleave",  ()=>{ rect.removeAttribute("opacity"); hideTip(); });
+        cell.addEventListener("click",()=>{
+          S.tagF.clear(); S.tagF.add(t1); S.tagF.add(t2); render();
+        });
+      }
+    });
+  });
+}
+
+// ── Render charts ─────────────────────────────────────────────────────────────
+function renderCharts() {
+  // Tag chart: rows filtered by conF + q (not tagF)
+  const forTags = getRows({noTag:true});
+  const tagCounts = {};
+  forTags.forEach(r => parseTags(r.tags).forEach(t => tagCounts[t]=(tagCounts[t]||0)+1));
+  const tagItems = Object.entries(TAGS)
+    .map(([t,info])=>({key:parseInt(t),label:info.label,count:tagCounts[t]||0}))
+    .filter(d=>d.count>0 || S.tagF.has(d.key))
+    .sort((a,b)=>b.count-a.count);
+  drawBarChart(
+    document.getElementById("ch-tags"), tagItems, S.tagF,
+    d=>TAGS[d.key]?.color||"#888",
+    key=>{ S.tagF.has(key)?S.tagF.delete(key):S.tagF.add(key); render(); },
+    d=>TAG_TIPS[d.key]
+  );
+
+  // Construct chart: rows filtered by tagF + q (not conF)
+  const forCons = getRows({noCon:true});
+  const conCounts = {};
+  forCons.forEach(r => parseList(r.constructs).forEach(c => conCounts[c]=(conCounts[c]||0)+1));
+  const conItems = Object.entries(conCounts)
+    .map(([k,v])=>({key:k,label:k,count:v}))
+    .sort((a,b)=>b.count-a.count)
+    .slice(0,12);
+  drawBarChart(
+    document.getElementById("ch-cons"), conItems, S.conF,
+    ()=>"#888",
+    key=>{ S.conF.has(key)?S.conF.delete(key):S.conF.add(key); render(); },
+    d=>CON_TIPS[d.key]
+  );
+
+  // Co-occurrence: search-only filtered rows (global picture)
+  const forCooc = getRows({noTag:true,noCon:true});
+  drawCooccur(document.getElementById("ch-cooc"), forCooc);
+}
+
+// ── Render filter chips ───────────────────────────────────────────────────────
+function renderChips() {
+  const container = document.getElementById("chips");
+  container.innerHTML = "";
+  const hasFilters = S.tagF.size > 0 || S.conF.size > 0 || S.q;
+
+  S.tagF.forEach(t => {
+    const info = TAGS[t];
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.style.background = info.color;
+    chip.innerHTML = `${esc(info.label)} <button title="Remove">&times;</button>`;
+    chip.querySelector("button").onclick = ()=>{ S.tagF.delete(t); render(); };
+    container.appendChild(chip);
+  });
+  S.conF.forEach(c => {
+    const chip = document.createElement("span");
+    chip.className = "chip con";
+    chip.innerHTML = `${esc(c)} <button title="Remove">&times;</button>`;
+    chip.querySelector("button").onclick = ()=>{ S.conF.delete(c); render(); };
+    container.appendChild(chip);
+  });
+
+  const cb = document.getElementById("clear-btn");
+  cb.classList.toggle("on", S.tagF.size > 0 || S.conF.size > 0);
+}
+
+// ── Render cards ──────────────────────────────────────────────────────────────
+function renderCards() {
+  const rows = getRows();
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+  document.getElementById("result-ct").textContent = `${rows.length} of ${S.rows.length} passages`;
+
+  if (!rows.length) {
+    container.innerHTML = `<div class="no-results">No passages match the current filters.</div>`;
+    return;
+  }
+
+  rows.forEach(r => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    // tag chips
+    const tagChips = parseTags(r.tags).map(t => {
+      const info = TAGS[t];
+      if (!info) return "";
+      const sel = S.tagF.has(t);
+      const tip = JSON.stringify(TAG_TIPS[t]||{}).replace(/"/g,"&quot;");
+      return `<span class="tc${sel?" ring":""}" style="background:${info.color}" data-t="${t}" data-tip="${tip}">${esc(info.label)}</span>`;
+    }).join("");
+
+    // construct chips
+    const conChips = parseList(r.constructs).map(c => {
+      const tip = JSON.stringify(CON_TIPS[c]||{h:c,b:"A dimension of how suffering beliefs are structured."}).replace(/"/g,"&quot;");
+      return `<span class="con-chip${S.conF.has(c)?" sel":""}" data-c="${esc(c)}" data-tip="${tip}">${esc(c)}</span>`;
+    }).join("");
+
+    // badges
+    const conf = (r.confidence||"").toUpperCase();
+    const confCls = conf==="HIGH"?"hi":conf==="MEDIUM"?"med":conf==="LOW"?"lo":"";
+    const isKw = r.filter_trigger==="keyword";
+    const confTip = JSON.stringify(CONF_TIPS[conf]||{}).replace(/"/g,"&quot;");
+    const trigTip = JSON.stringify(TRIGGER_TIPS[isKw?"keyword":"contextual"]).replace(/"/g,"&quot;");
+    const excerptFull = (r.text_excerpt||"").trim();
+    const excerptShort = excerptFull.length > 350 ? excerptFull.slice(0,350)+"…" : excerptFull;
+    const hasMore = excerptFull.length > 350;
+
+    card.innerHTML = `
+      <div class="card-body">
+        <div class="card-top">
+          <span class="cid">${esc(r.chunk_id)}</span>
+          <div class="badges">
+            ${conf?`<span class="badge ${confCls}" data-tip="${confTip}">${conf}</span>`:""}
+            <span class="badge${isKw?" kw":""}" data-tip="${trigTip}">${isKw?`kw: ${esc(r.keyword)}`:"contextual"}</span>
+          </div>
+        </div>
+        <div class="belief">${esc(r.core_belief||"—")}</div>
+        <div class="tags">${tagChips}</div>
+        ${conChips?`<div class="cons"><span class="con-lbl">constructs:</span>${conChips}</div>`:""}
+        <div>
+          <div class="excerpt" id="ex-${esc(r.chunk_id)}">${esc(excerptShort)}</div>
+          ${hasMore?`<button class="more-btn" data-full="${esc(excerptFull)}" data-short="${esc(excerptShort)}" data-id="${esc(r.chunk_id)}">show more</button>`:""}
+        </div>
+        ${r.new_candidate_label?`<div class="nc-box"><strong>New candidate: ${esc(r.new_candidate_label)}</strong> ${esc(r.new_candidate_definition)}</div>`:""}
+      </div>
+      <button class="ctx-toggle" data-id="${esc(r.chunk_id)}"><span class="ctx-arrow">▶</span> Show in context</button>
+      <div class="ctx-body" id="ctx-${esc(r.chunk_id)}"></div>
+    `;
+
+    // tag chip clicks
+    card.querySelectorAll(".tc").forEach(el => {
+      el.addEventListener("click", () => {
+        const t = parseInt(el.dataset.t);
+        S.tagF.has(t) ? S.tagF.delete(t) : S.tagF.add(t);
+        render();
+      });
+    });
+    // construct chip clicks
+    card.querySelectorAll(".con-chip").forEach(el => {
+      el.addEventListener("click", () => {
+        const c = el.dataset.c;
+        S.conF.has(c) ? S.conF.delete(c) : S.conF.add(c);
+        render();
+      });
+    });
+    // show more/less excerpt
+    const moreBtn = card.querySelector(".more-btn");
+    if (moreBtn) {
+      moreBtn.addEventListener("click", () => {
+        const exEl = document.getElementById(`ex-${r.chunk_id}`);
+        if (moreBtn.textContent === "show more") {
+          exEl.textContent = moreBtn.dataset.full;
+          moreBtn.textContent = "show less";
+        } else {
+          exEl.textContent = moreBtn.dataset.short;
+          moreBtn.textContent = "show more";
+        }
+      });
+    }
+    // context toggle
+    const ctxBtn = card.querySelector(".ctx-toggle");
+    ctxBtn.addEventListener("click", () => {
+      ctxBtn.classList.toggle("open");
+      const body = document.getElementById(`ctx-${r.chunk_id}`);
+      body.classList.toggle("open");
+      if (body.classList.contains("open") && !body.dataset.built) {
+        body.dataset.built = "1";
+        buildContextPanel(body, r.chunk_id);
+      }
+    });
+
+    container.appendChild(card);
+  });
+}
+
+// ── Build context panel ───────────────────────────────────────────────────────
+function buildContextPanel(container, chunkId) {
+  if (!S.labeled) {
+    container.innerHTML = `<div class="ctx-not-loaded">Load the labeled .txt file (via "+ Load context file" in the header) to see surrounding chunks.</div>`;
+    return;
+  }
+  const { chunks, order } = S.labeled;
+  const cur = chunks[chunkId];
+  if (!cur) {
+    container.innerHTML = `<div class="ctx-not-loaded">Chunk not found in labeled file.</div>`;
+    return;
+  }
+  const idx = cur.index;
+  const prevIds = order.slice(Math.max(0,idx-2), idx);
+  const nextIds = order.slice(idx+1, idx+3);
+
+  function chunkBlock(id, isCurrent) {
+    const ch = chunks[id];
+    if (!ch) return "";
+    const isArch = ["YES","MAYBE"].includes((ch.filter||"").toUpperCase());
+    const filterLabel = ch.filter === "N/A" ? "not screened" : `filter: ${ch.filter}`;
+    const archBadge = isArch ? ` <span class="ctx-badge arch">ARCHIVED</span>` : "";
+    const maybeBadge = ch.filter==="MAYBE"?` <span class="ctx-badge maybe">MAYBE</span>`:"";
+    const kw = ch.keyword && ch.keyword!=="none" ? ` <span class="ctx-badge">kw: ${esc(ch.keyword)}</span>` : "";
+    const displayText = isCurrent ? ch.text : (ch.text.length > 500 ? ch.text.slice(0,500)+"…" : ch.text);
+    return `
+      <div class="ctx-chunk${isCurrent?" current":""}">
+        <div class="ctx-chunk-hdr">
+          <span class="ctx-cid">${esc(id)}</span>
+          <span class="ctx-badge">screen: ${esc(ch.screen)}</span>
+          <span class="ctx-badge">${esc(filterLabel)}</span>
+          ${archBadge}${kw}
+        </div>
+        <div class="ctx-chunk-txt">${esc(displayText)}</div>
+      </div>`;
+  }
+
+  container.innerHTML =
+    prevIds.map(id => chunkBlock(id, false)).join("") +
+    chunkBlock(chunkId, true) +
+    nextIds.map(id => chunkBlock(id, false)).join("");
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+function render() {
+  renderChips();
+  renderCharts();
+  renderCards();
+}
+
+// ── Setup header meta ─────────────────────────────────────────────────────────
+function setupMeta() {
+  const sources = [...new Set(S.rows.map(r=>r.source))];
+  document.getElementById("run-title").textContent =
+    sources.length === 1 ? sources[0].replace(/_/g," ") : `${sources.length} sources`;
+  const d = S.rows[0]?.run_date?.split("T")[0] || "";
+  const m = S.rows[0]?.model_tag || "";
+  document.getElementById("m-date").innerHTML = d ? `<strong>${d}</strong>` : "";
+  document.getElementById("m-model").innerHTML = m ? `model: <strong>${m}</strong>` : "";
+  const n = S.rows.length;
+  const kw = S.rows.filter(r=>r.filter_trigger==="keyword").length;
+  document.getElementById("m-counts").innerHTML = `<strong>${n}</strong> archived · <strong>${kw}</strong> keyword · <strong>${n-kw}</strong> contextual`;
+}
+
+// ── File loading ──────────────────────────────────────────────────────────────
+function loadCSV(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const rows = parseCSV(e.target.result);
+      if (!rows.length) throw new Error("No rows found");
+      S.rows = rows;
+      document.getElementById("load-screen").style.display = "none";
+      document.getElementById("app").classList.add("on");
+      setupMeta();
+      render();
+    } catch(err) {
+      document.getElementById("load-err").textContent = "Error loading CSV: " + err.message;
+    }
+  };
+  reader.readAsText(file);
+}
+
+function loadLabeled(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    S.labeled = parseLabeledFile(e.target.result);
+    document.getElementById("ctx-btn").classList.add("loaded");
+    document.getElementById("ctx-btn").title = `Loaded: ${file.name} (${S.labeled.order.length} chunks)`;
+    // Reset any open context panels so they rebuild with the new data
+    document.querySelectorAll(".ctx-body[data-built]").forEach(el => {
+      delete el.dataset.built;
+      if (el.classList.contains("open")) buildContextPanel(el, el.id.replace("ctx-",""));
+    });
+  };
+  reader.readAsText(file);
+}
+
+// ── Event listeners ───────────────────────────────────────────────────────────
+document.getElementById("csv-file").addEventListener("change", e => { if(e.target.files[0]) loadCSV(e.target.files[0]); });
+document.getElementById("ctx-file").addEventListener("change", e => { if(e.target.files[0]) loadLabeled(e.target.files[0]); });
+
+// Drag & drop on load screen
+const loadScreen = document.getElementById("load-screen");
+loadScreen.addEventListener("dragover", e => { e.preventDefault(); loadScreen.classList.add("drag-over"); });
+loadScreen.addEventListener("dragleave", () => loadScreen.classList.remove("drag-over"));
+loadScreen.addEventListener("drop", e => {
+  e.preventDefault(); loadScreen.classList.remove("drag-over");
+  const f = [...e.dataTransfer.files].find(f => f.name.endsWith(".csv"));
+  if (f) loadCSV(f); else document.getElementById("load-err").textContent = "Drop a .csv file.";
+});
+
+document.getElementById("search").addEventListener("input", e => { S.q = e.target.value.toLowerCase().trim(); render(); });
+document.getElementById("clear-btn").addEventListener("click", () => { S.tagF.clear(); S.conF.clear(); render(); });
+</script>
+</body>
+</html>
