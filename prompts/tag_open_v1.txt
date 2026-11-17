@@ -1,0 +1,33 @@
+Step 4: open coding.
+
+<passage>
+<<PASSAGE>>
+</passage>
+
+Core belief from the filter step: "<<CORE_BELIEF>>"
+The core belief is a one-sentence first-pass summary and may be incomplete or wrong. Code from the passage.
+
+Name each suffering belief this passage expresses, whether it endorses the belief, denies it, merely mentions it, holds it conditionally, or depicts it. There is no code list and no list of topics at this stage. The project is building its classification from what the texts say, so describe each belief in its own terms and do not fit it to categories you expect to find. A belief of a kind nobody anticipated is as welcome as a familiar one.
+
+Respond with one JSON object, fields in this order:
+{"beliefs": [{"evidence": "...", "definition": "...", "label": "...", "stance": "endorses"|"denies"|"mentions"|"conditional"|"depicts"}], "confidence": "HIGH"|"MEDIUM"|"LOW"}
+
+beliefs: one entry for each distinct belief that passes the five tests. Two claims are distinct beliefs when the same person could agree with one and disagree with the other. Otherwise they are one belief and are listed once. A long passage may hold several. A passage may also hold none, because the filter step can be wrong; in that case return an empty list.
+
+evidence: the sentence or clause that carries this belief, copied exactly from the passage (fillers, speaker labels and all), at most 40 words.
+
+definition: the belief as one short sentence in everyday words, where possible beginning "Suffering", that a survey respondent of any religion or none could agree or disagree with. Keep it general: leave out names, settings, doctrine and anything else particular to this passage.
+
+label: two to four plain words naming the belief, as general as the definition. The same belief met in a different passage should receive the same label, so prefer the most ordinary wording.
+
+stance: how the passage stands toward the belief.
+"endorses": the passage puts the belief forward as true.
+"denies": the passage explicitly rejects it. Write the definition and label for the belief being denied: a passage saying pain is not a punishment denies the belief that suffering is punishment.
+"mentions": the passage reports the belief as something people say or hold, such as a common saying or a view attributed to others, without taking a side.
+"conditional": the passage holds the belief only in some circumstances or with a stated qualification. Put the condition in the definition.
+"depicts": a story or poem shows the belief through what happens, with the link made in the passage itself, and no narrator or character states it.
+
+confidence: how likely an independent trained coder, reading only this passage, would find the same beliefs.
+HIGH: very likely the same beliefs.
+MEDIUM: likely the same main belief, but they might add or drop one.
+LOW: a belief is only implied, the passage is ambiguous, or it is unclear whether the claims are one belief or several. LOW cases all go to human review, which is what the rating is for.

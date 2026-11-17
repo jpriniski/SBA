@@ -1,0 +1,23 @@
+# Podcast, host and guest. Expect: YES. Hedged first-person speech that generalizes with "you".
+GUEST: ...and I think, like, the thing nobody tells you is that the pain doesn't get smaller, you just -- you get bigger around it, if that makes sense. HOST: Yeah. GUEST: Like it's still there, it's the same size, but there's more of you.
+---
+# Podcast anecdote. Expect: NO. One person's episode, no general claim.
+So my dad got sick in 2019 and I was driving back and forth to the hospital every weekend for like eight months, and honestly that year kind of wrecked me.
+---
+# TED-style talk. Expect: YES. A lesson drawn from experience.
+Here's what I've learned from ten years of working with refugees: nobody heals alone. Suffering that stays private stays stuck.
+---
+# Self-help. Expect: YES. Denies punishment, endorses pain as information.
+Your pain is not a punishment. It is information. Every hard feeling is pointing at something you still need to attend to.
+---
+# Social-media post. Expect: a common saying, endorsed.
+everything happens for a reason 🙏 what broke me made me
+---
+# Interview transcript. Expect: YES. Suffering has no reason; the question sets the general scope.
+I: Why do you think people suffer? P: Um, honestly? I don't think there's a why. I think it just -- it happens, and then you deal with it. Looking for a reason is kind of the trap.
+---
+# Compound statement. Expect: YES, two beliefs; the first clause is true by definition and is not one of them.
+Suffering is unpleasant, but it can be mixed with joys, and over time become something different from unpleasant.
+---
+# Expect: NO. An instance; "suffering is caused by change" would be the coder's inference.
+Chemotherapy changed so many things.
