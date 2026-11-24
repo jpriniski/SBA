@@ -1,0 +1,13 @@
+Step 3a: screen.
+
+<passage>
+<<PASSAGE>>
+</passage>
+
+Decide whether this passage should go on to full coding.
+
+Answer YES if any part of it could plausibly be read as stating, implying or disputing a general claim about suffering as a phenomenon, on any aspect of it, whether or not the word "suffering" appears. Answer NO only if no part of it does: the passage is on another topic, or it narrates, describes, laments or gives practical instructions without any general claim about suffering.
+
+This step is a recall screen. A passage you answer NO to may never be read again, while a YES costs only one more reading, so when you are unsure answer YES.
+
+Respond with JSON only: {"screen": "YES"|"NO"}

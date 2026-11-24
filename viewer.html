@@ -10,13 +10,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* ── Load screen ── */
 #load-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px;text-align:center}
-#load-screen.drag-over{background:#e8e6e0}
+body.drag-over #load-screen{background:#e8e6e0}
 #load-screen h1{font-size:1.4rem;font-weight:600}
-#load-screen p{color:#888;font-size:.88rem;max-width:400px}
-.load-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:6px;font-size:.84rem;cursor:pointer;border:none;font-family:inherit}
+#load-screen p{color:#777;font-size:.88rem;max-width:520px;line-height:1.55}
+#load-screen code{background:#eceae4;border-radius:3px;padding:1px 4px;font-size:.8rem}
+.load-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.load-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:6px;font-size:.84rem;cursor:pointer;border:1px solid #2c2c2c;font-family:inherit}
 .load-btn-primary{background:#2c2c2c;color:#fff}.load-btn-primary:hover{background:#444}
+.load-btn-plain{background:#fff;color:#2c2c2c}.load-btn-plain:hover{background:#f0eee8}
 input[type=file]{display:none}
-#load-err{font-size:.78rem;color:#c0392b}
+#load-err{font-size:.8rem;color:#c0392b;max-width:520px;line-height:1.5}
 
 /* ── App ── */
 #app{display:none}
@@ -26,92 +29,122 @@ input[type=file]{display:none}
 .top-bar{position:sticky;top:0;z-index:200;background:#fff;border-bottom:1px solid #ddd;padding:0 16px;height:46px;display:flex;align-items:center;gap:10px}
 .top-bar h1{font-size:.9rem;font-weight:600;white-space:nowrap}
 .top-bar .sep{flex:1}
-.meta{display:flex;gap:14px;align-items:center}
-.meta span{font-size:.74rem;color:#999}
+.meta{display:flex;gap:14px;align-items:center;overflow:hidden}
+.meta span{font-size:.74rem;color:#888;white-space:nowrap}
 .meta span strong{color:#444}
-.ctx-load-btn{font-size:.73rem;padding:4px 10px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#666;cursor:pointer;white-space:nowrap}
+.ctx-load-btn{font-size:.73rem;padding:4px 10px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#555;cursor:pointer;white-space:nowrap}
 .ctx-load-btn:hover{background:#f5f5f5}
-.ctx-load-btn.loaded{border-color:#27ae60;color:#27ae60}
+#notice{display:none;background:#fff8e0;border-bottom:1px solid #f0d070;color:#6b4c00;font-size:.78rem;padding:7px 16px;line-height:1.5}
+#notice.on{display:block}
 
 /* ── Layout ── */
 .main{display:flex;flex:1;align-items:flex-start}
 
 /* ── Sidebar ── */
-#sidebar{width:280px;min-width:280px;position:sticky;top:46px;height:calc(100vh - 46px);overflow-y:auto;background:#fff;border-right:1px solid #e2dfd8;padding:14px 12px;display:flex;flex-direction:column;gap:20px}
-.chart-sec h3{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:#bbb;margin-bottom:8px}
-.chart-hint{font-size:.67rem;color:#ccc;font-style:italic;margin-top:3px}
+#sidebar{width:280px;min-width:280px;position:sticky;top:46px;height:calc(100vh - 46px);overflow-y:auto;background:#fff;border-right:1px solid #e2dfd8;padding:14px 12px;display:flex;flex-direction:column;gap:18px}
+.chart-sec h3{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:#999;margin-bottom:8px}
+.chart-hint{font-size:.67rem;color:#aaa;font-style:italic;margin-top:3px;line-height:1.4}
 .chart-svg{display:block;width:100%;overflow:visible}
+.hist-lbl{font-size:.7rem;color:#666;margin:6px 0 2px}
 
 /* ── Cards column ── */
 .cards-col{flex:1;min-width:0;display:flex;flex-direction:column}
 
 /* ── Filter bar ── */
 .filter-bar{position:sticky;top:46px;z-index:100;background:#faf9f6;border-bottom:1px solid #e8e5de;padding:7px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-#search{padding:5px 10px;border:1px solid #ccc;border-radius:5px;font-size:.82rem;width:195px;font-family:inherit}
+#search{padding:5px 10px;border:1px solid #ccc;border-radius:5px;font-size:.82rem;width:210px;font-family:inherit}
+.view-sw{display:inline-flex;border:1px solid #ccc;border-radius:5px;overflow:hidden}
+.view-sw button{font-family:inherit;font-size:.74rem;padding:5px 10px;border:none;background:#fff;color:#666;cursor:pointer}
+.view-sw button.on{background:#2c2c2c;color:#fff}
 .chips-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
-.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:500;color:#fff}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:500;color:#fff;background:#555}
 .chip button{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:.82rem;line-height:1;padding:0 1px}
 .chip button:hover{color:#fff}
-.chip.con{background:#555}
 #clear-btn{font-size:.7rem;padding:3px 8px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#777;cursor:pointer;display:none}
 #clear-btn.on{display:block}
-#result-ct{font-size:.73rem;color:#bbb;white-space:nowrap;margin-left:auto}
+#result-ct{font-size:.73rem;color:#888;white-space:nowrap;margin-left:auto}
 
 /* ── Cards ── */
 #cards{padding:13px 14px 40px;display:flex;flex-direction:column;gap:11px}
-.no-results{text-align:center;color:#ccc;font-size:.88rem;padding:60px 40px}
+.no-results{text-align:center;color:#aaa;font-size:.88rem;padding:60px 40px}
 
 .card{background:#fff;border:1px solid #e2dfd8;border-radius:8px;overflow:hidden}
-.card-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.card.flash{box-shadow:0 0 0 3px #f0c040}
+.card-body{padding:12px 14px;display:flex;flex-direction:column;gap:9px}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.cid{font-size:.67rem;color:#ccc;font-family:monospace;padding-top:1px}
-.badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.cid{font-size:.67rem;color:#aaa;font-family:monospace;padding-top:1px}
+.csrc{font-size:.72rem;color:#666;font-family:inherit;margin-left:8px}
+.badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .badge{font-size:.65rem;padding:2px 6px;border-radius:3px;background:#f0ede6;color:#777}
 .badge.kw{background:#fef3cd;color:#7a5c00}
 .badge.hi{background:#e8f5e8;color:#2a6a2a}
 .badge.med{background:#fff8e0;color:#7a6000}
 .badge.lo{background:#fce8e8;color:#8a2020}
 
-.belief{font-size:.86rem;font-style:italic;color:#333;line-height:1.55;border-left:3px solid #e0ddd7;padding-left:10px}
+.legacy-line{font-size:.78rem;color:#555;line-height:1.5}
+.legacy-line span{color:#999}
 
-.tags{display:flex;flex-wrap:wrap;gap:5px}
-.tc{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.68rem;font-weight:500;color:#fff;cursor:pointer;border:2.5px solid transparent}
-.tc:hover{opacity:.85}
-.tc.ring{border-color:rgba(0,0,0,.25)}
-
-.cons{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-.con-lbl{font-size:.67rem;color:#ccc}
-.con-chip{font-size:.66rem;padding:2px 6px;border-radius:3px;background:#f0ede6;color:#555;cursor:pointer}
-.con-chip:hover{background:#e0ddd6}
-.con-chip.sel{background:#555;color:#fff}
+.sec-h{font-size:.64rem;text-transform:uppercase;letter-spacing:.07em;color:#999;margin-bottom:-3px}
+.sec-h em{text-transform:none;letter-spacing:0;font-size:.7rem;color:#aaa}
+.entry{border-left:3px solid #2c2c2c;padding:2px 0 2px 10px;display:flex;flex-direction:column;gap:3px}
+.entry.depicted{border-left-color:#9b7fc0;border-left-style:dashed}
+.entry.dim{opacity:.32}
+.e-head{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.e-label{font-size:.86rem;font-weight:600;color:#222;margin-right:2px}
+.e-def{font-size:.84rem;color:#333;line-height:1.5}
+.e-ev{font-size:.78rem;color:#666;line-height:1.5;font-style:italic}
+.e-reason{font-size:.72rem;color:#999;line-height:1.45}
+.nv{font-style:normal;font-size:.64rem;background:#fce8e8;color:#8a2020;border-radius:3px;padding:1px 5px;margin-left:6px;white-space:nowrap}
+.st,.ar,.rt{font-size:.66rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.st{cursor:pointer;border:1px solid transparent}
+.st-endorses{background:#e8f5e8;color:#2a6a2a}
+.st-denies{background:#fce8e8;color:#8a2020}
+.st-mentions{background:#eeeeee;color:#555}
+.st-conditional{background:#fff3d6;color:#7a5c00}
+.st-depicted{background:#efe8f8;color:#5d3f8a}
+.st-none{background:#f4f4f4;color:#999}
+.ar{color:#fff;cursor:pointer}
+.st.sel,.ar.sel{box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.rt{background:#f0ede6;color:#555}
+.rt.na{color:#bbb}
+.none-found{font-size:.8rem;color:#999;font-style:italic}
 
 .excerpt{font-size:.79rem;color:#555;line-height:1.65;background:#fafaf8;border-radius:4px;padding:7px 9px;white-space:pre-wrap;word-break:break-word}
-.more-btn{background:none;border:none;color:#bbb;font-size:.69rem;cursor:pointer;text-decoration:underline dotted;padding:1px 0;font-family:inherit}
-
-.nc-box{font-size:.74rem;background:#fffbec;border:1px solid #f0d070;border-radius:4px;padding:6px 9px;color:#6b4c00}
-.nc-box strong{font-weight:600}
+.excerpt mark{background:#fff1a8;color:inherit;border-radius:2px;padding:0 1px}
+.excerpt mark.depicted{background:#e7dcf6}
+.more-btn{background:none;border:none;color:#888;font-size:.69rem;cursor:pointer;text-decoration:underline dotted;padding:1px 0;font-family:inherit}
 
 /* ── Context panel ── */
-.ctx-toggle{width:100%;text-align:left;padding:7px 14px;background:#fafaf8;border:none;border-top:1px solid #eee;font-size:.7rem;color:#aaa;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
-.ctx-toggle:hover{background:#f5f4f0;color:#777}
+.ctx-toggle{width:100%;text-align:left;padding:7px 14px;background:#fafaf8;border:none;border-top:1px solid #eee;font-size:.7rem;color:#888;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+.ctx-toggle:hover{background:#f5f4f0;color:#555}
 .ctx-arrow{display:inline-block;transition:transform .15s}
 .ctx-toggle.open .ctx-arrow{transform:rotate(90deg)}
 .ctx-body{display:none;border-top:1px solid #eee}
 .ctx-body.open{display:block}
 .ctx-chunk{border-bottom:1px solid #f0ede8}
 .ctx-chunk:last-child{border-bottom:none}
-.ctx-chunk-hdr{padding:5px 14px;font-size:.68rem;display:flex;align-items:center;gap:7px;background:#fafaf8;color:#888}
-.ctx-cid{color:#ccc;font-family:monospace}
+.ctx-chunk-hdr{padding:5px 14px;font-size:.68rem;display:flex;align-items:center;gap:7px;background:#fafaf8;color:#888;flex-wrap:wrap}
+.ctx-cid{color:#aaa;font-family:monospace}
 .ctx-badge{padding:1px 5px;border-radius:2px;background:#eee;color:#777;font-size:.62rem}
 .ctx-badge.arch{background:#e8f5e8;color:#2a6a2a}
-.ctx-badge.maybe{background:#fffbe0;color:#7a6000}
 .ctx-chunk.current .ctx-chunk-hdr{background:#eef3fb}
 .ctx-chunk-txt{font-size:.76rem;color:#555;line-height:1.6;padding:7px 14px;white-space:pre-wrap;word-break:break-word;max-height:170px;overflow-y:auto}
-.ctx-chunk.current .ctx-chunk-txt{background:#f8faff;max-height:none}
-.ctx-not-loaded{font-size:.76rem;color:#ccc;font-style:italic;padding:9px 14px}
+.ctx-not-loaded{font-size:.76rem;color:#999;font-style:italic;padding:9px 14px}
+
+/* ── Beliefs table ── */
+#table-wrap{padding:13px 14px 40px;display:none}
+table.bt{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e2dfd8;border-radius:8px;font-size:.78rem}
+table.bt th{position:sticky;top:86px;background:#faf9f6;text-align:left;font-size:.64rem;text-transform:uppercase;letter-spacing:.06em;color:#888;padding:7px 8px;border-bottom:1px solid #e2dfd8;cursor:pointer;white-space:nowrap}
+table.bt th.sorted{color:#222}
+table.bt td{padding:6px 8px;border-bottom:1px solid #f0ede8;vertical-align:top;line-height:1.45}
+table.bt tr.row{cursor:pointer}
+table.bt tr.row:hover td{background:#fafaf5}
+table.bt td.num{text-align:center;color:#444;white-space:nowrap}
+table.bt td.lab{font-weight:600}
+table.bt td.src{color:#888;font-size:.72rem}
 
 /* ── Tooltip ── */
-#tip{position:fixed;z-index:9999;pointer-events:none;display:none;max-width:260px;background:#1a1a1a;color:#eee;font-size:.75rem;line-height:1.5;padding:7px 10px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#tip{position:fixed;z-index:9999;pointer-events:none;display:none;max-width:280px;background:#1a1a1a;color:#eee;font-size:.75rem;line-height:1.5;padding:7px 10px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 #tip strong{color:#fff;display:block;margin-bottom:2px;font-size:.77rem}
 </style>
 </head>
@@ -120,11 +153,17 @@ input[type=file]{display:none}
 <!-- Load screen -->
 <div id="load-screen">
   <h1>Suffering Beliefs — Annotation Viewer</h1>
-  <p>Drag a <code>pilot_archive.csv</code> onto this page, or click to load it.</p>
-  <label class="load-btn load-btn-primary">
-    Open archive CSV
-    <input type="file" id="csv-file" accept=".csv">
-  </label>
+  <p>Open the folder of one run, for example <code>results/run4_depicted_separate</code>. The viewer reads <code>open_codes.csv</code>, <code>depicted_themes.csv</code>, <code>pilot_archive.csv</code>, <code>run_log.json</code> and the files in <code>labeled</code>. You can also drop the folder or its files onto this page.</p>
+  <div class="load-row">
+    <label class="load-btn load-btn-primary">
+      Open run folder
+      <input type="file" id="dir-input" webkitdirectory multiple>
+    </label>
+    <label class="load-btn load-btn-plain">
+      Open files
+      <input type="file" id="file-input" accept=".csv,.txt,.json" multiple>
+    </label>
+  </div>
   <div id="load-err"></div>
 </div>
 
@@ -135,108 +174,132 @@ input[type=file]{display:none}
     <div class="sep"></div>
     <div class="meta">
       <span id="m-date"></span>
-      <span id="m-model"></span>
+      <span id="m-prompts"></span>
       <span id="m-counts"></span>
+      <span id="m-cost"></span>
     </div>
-    <label class="ctx-load-btn" id="ctx-btn" title="Load the _labeled.txt file to enable full passage context">
-      + Load context file
-      <input type="file" id="ctx-file" accept=".txt">
+    <label class="ctx-load-btn" title="Add more files from the same run, for example the labeled .txt files">
+      + Add files
+      <input type="file" id="add-input" accept=".csv,.txt,.json" multiple>
     </label>
   </header>
+  <div id="notice"></div>
 
   <div class="main">
-    <!-- Sidebar: charts -->
     <aside id="sidebar">
       <div class="chart-sec">
-        <h3>Belief Tags</h3>
-        <svg id="ch-tags" class="chart-svg"></svg>
-        <div class="chart-hint">Click bar to filter · updates construct chart</div>
+        <h3>Passages</h3>
+        <svg id="ch-status" class="chart-svg"></svg>
+        <div class="chart-hint">Click a bar to filter. Passages that were not coded stay hidden unless selected.</div>
+      </div>
+      <div class="chart-sec" id="sec-source">
+        <h3>Texts</h3>
+        <svg id="ch-source" class="chart-svg"></svg>
+        <div class="chart-hint">Passages per text</div>
       </div>
       <div class="chart-sec">
-        <h3>Construct Dimensions</h3>
-        <svg id="ch-cons" class="chart-svg"></svg>
-        <div class="chart-hint">Shows constructs within selected tags · click to filter</div>
+        <h3>Belief areas</h3>
+        <svg id="ch-area" class="chart-svg"></svg>
+        <div class="chart-hint">Stated beliefs and depicted themes, by area</div>
       </div>
       <div class="chart-sec">
-        <h3>Tag Co-occurrence</h3>
-        <svg id="ch-cooc" class="chart-svg"></svg>
-        <div class="chart-hint">Click cell to filter both tags simultaneously</div>
+        <h3>Stance</h3>
+        <svg id="ch-stance" class="chart-svg"></svg>
+        <div class="chart-hint">How the passage stands toward each belief</div>
+      </div>
+      <div class="chart-sec">
+        <h3>Ratings (1–5)</h3>
+        <div class="hist-lbl">Evaluation</div>
+        <svg id="ch-r-evaluation" class="chart-svg"></svg>
+        <div class="hist-lbl">Inevitability</div>
+        <svg id="ch-r-inevitability" class="chart-svg"></svg>
+        <div class="hist-lbl">Intertwinement</div>
+        <svg id="ch-r-intertwinement" class="chart-svg"></svg>
+        <div class="chart-hint">Stated beliefs only. “–” means no rating was given. Click a bar to filter.</div>
       </div>
     </aside>
 
-    <!-- Cards column -->
     <div class="cards-col">
       <div class="filter-bar">
-        <input type="text" id="search" placeholder="Search beliefs, text, keywords…">
+        <input type="text" id="search" placeholder="Search labels, definitions, text…">
+        <div class="view-sw">
+          <button id="v-passages" class="on">Passages</button>
+          <button id="v-beliefs">Beliefs</button>
+        </div>
         <div class="chips-row" id="chips"></div>
         <button id="clear-btn">Clear filters</button>
         <span id="result-ct"></span>
       </div>
       <div id="cards"></div>
+      <div id="table-wrap"></div>
     </div>
   </div>
 </div>
 
 <div id="tip"></div>
-
 <script>
-// ── Tag metadata ───────────────────────────────────────────────────────────────
-const TAGS = {
-  0:{label:"None / New",        short:"New",         color:"#2c3e50"},
-  1:{label:"Punishment",        short:"Punishment",  color:"#c0392b"},
-  2:{label:"Teacher/growth",    short:"Teacher",     color:"#27ae60"},
-  3:{label:"Craving/attachment",short:"Craving",     color:"#8e44ad"},
-  4:{label:"Shared condition",  short:"Shared",      color:"#2980b9"},
-  5:{label:"Call to compassion",short:"Compassion",  color:"#d35400"},
-  6:{label:"Acceptance",        short:"Acceptance",  color:"#16a085"},
-  7:{label:"Mystery",           short:"Mystery",     color:"#7f8c8d"},
+// ── Fixed vocabularies (same wording as the prompts) ──────────────────────────
+const AREAS = {
+  understanding:          {label:"understanding",          color:"#5b6abf", b:"What suffering is, what counts as suffering, how it shows itself."},
+  prevalence:             {label:"prevalence",             color:"#2980b9", b:"How common or expected suffering is in a human life."},
+  causes:                 {label:"causes",                 color:"#c0392b", b:"Why people suffer."},
+  consequences:           {label:"consequences",           color:"#d35400", b:"What suffering does to people."},
+  controllability:        {label:"controllability",        color:"#8e44ad", b:"How much control people have over suffering."},
+  personal_response:      {label:"personal response",      color:"#16a085", b:"How people should respond to their own suffering."},
+  interpersonal_response: {label:"interpersonal response", color:"#27ae60", b:"How people should respond to the suffering of others."},
+  overall_evaluation:     {label:"overall evaluation",     color:"#b7950b", b:"How suffering should be judged overall (bad, good, mixed)."},
+  meaning_fairness:       {label:"meaning and fairness",   color:"#6d4c41", b:"Whether suffering has a purpose or meaning, and whether it is deserved or just."},
+  other:                  {label:"other",                  color:"#2c3e50", b:"None of the listed areas. The area note says what the belief is about."},
+  "":                     {label:"not assigned",           color:"#aaaaaa", b:"Step 5 did not assign an area."},
 };
-
-// ── Tooltip content ───────────────────────────────────────────────────────────
-const TAG_TIPS = {
-  0: {h:"None / New candidate", b:"The passage expresses a belief about suffering that doesn't fit existing categories — a new label was proposed."},
-  1: {h:"Punishment / Consequence", b:"Suffering results from wrongdoing or violation of moral/natural order. It is deserved consequence or just retribution."},
-  2: {h:"Teacher / Growth", b:"Suffering instructs, refines character, or builds resilience. It has a developmental or redemptive purpose."},
-  3: {h:"Craving / Attachment", b:"Suffering arises from desire, clinging, or resistance to what is. Freedom comes through releasing attachment."},
-  4: {h:"Shared condition", b:"Suffering is the universal human lot — everyone suffers and we are united by this shared condition."},
-  5: {h:"Call to compassion", b:"Suffering obligates care, solidarity, and action from others. It is a call to respond with compassion."},
-  6: {h:"Acceptance / Equanimity", b:"Suffering is to be met with calm acceptance or non-resistance rather than struggle or avoidance."},
-  7: {h:"Mystery / Unknowable", b:"Suffering's meaning, cause, or purpose is beyond human comprehension — it resists explanation."},
+const STANCES = {
+  endorses:    {label:"endorses",       color:"#2a6a2a", b:"The passage puts the belief forward as true."},
+  denies:      {label:"denies",         color:"#b03a2e", b:"The passage explicitly rejects the belief. The definition states the belief in its positive form."},
+  mentions:    {label:"mentions",       color:"#777777", b:"The passage reports the belief as something people say or hold, without taking a side."},
+  conditional: {label:"conditional",    color:"#b7860b", b:"The passage holds the belief only in some circumstances. The condition is in the definition."},
+  depicted:    {label:"depicted theme", color:"#7d5fb0", b:"Shown by what happens in a story, poem or anecdote. Nobody in the passage states it. This is the coder's reading."},
+  none:        {label:"no stance",      color:"#aaaaaa", b:"No stance was recorded."},
 };
-const CON_TIPS = {
-  prevalence:        {h:"Prevalence", b:"How common or universal suffering is — is it rare and individual, or the inevitable lot of all humans?"},
-  controllability:   {h:"Controllability", b:"Whether suffering can be avoided, reduced, or controlled — or whether it is inescapable and inevitable."},
-  evaluation:        {h:"Evaluation", b:"Whether suffering is judged as harmful, beneficial, morally neutral, or some complex mixture of these."},
-  cause:             {h:"Cause", b:"What causes suffering — personal choices, random chance, structural forces, divine will, or natural law?"},
-  consequences:      {h:"Consequences", b:"What suffering leads to — growth, decline, transformation, moral insight, or nothing at all."},
-  meaning:           {h:"Meaning", b:"Whether suffering carries meaning, purpose, or value beyond the immediate experience of pain."},
-  fairness:          {h:"Fairness", b:"Whether suffering is deserved, just, and equitable — or arbitrary, unjust, and undeserved."},
-  responsibility:    {h:"Responsibility", b:"Who bears responsibility for suffering — the individual, society, God, fate, or some combination?"},
-  helpful_responses: {h:"Helpful responses", b:"How one ought to respond to suffering — endure it, resist it, help those who suffer, or accept it."},
-  punishment:        {h:"Punishment (construct)", b:"Relates to the idea that suffering serves as retribution or consequence for moral transgression."},
+const STATUS = {
+  stated:   {label:"With stated beliefs",   color:"#2c2c2c", b:"The passage states at least one belief about suffering."},
+  depicted: {label:"Depicted themes only",  color:"#7d5fb0", b:"The passage states no belief, but the coder recorded at least one depicted theme."},
+  none:     {label:"Coded, nothing found",  color:"#b0aca2", b:"The passage was coded and neither list has an entry."},
+  uncoded:  {label:"Not coded",             color:"#d8d5cc", b:"The passage was not selected: the screen judged it not to be about suffering, or the filter rejected it."},
 };
+const RATINGS = {
+  evaluation:     {label:"Evaluation",     short:"Eval",    b:"Is suffering only harmful, or can it also be of value? 1 = purely harmful. 3 = mixed or qualified. 5 = suffering can enrich a life."},
+  inevitability:  {label:"Inevitability",  short:"Inev",    b:"Can suffering be avoided, or is it part of every life? 1 = avoidable or exceptional. 3 = some can be avoided, some cannot. 5 = an inevitable part of every life."},
+  intertwinement: {label:"Intertwinement", short:"Intertw", b:"How is suffering related to the good things in life? 1 = separate from and opposed to what is good. 3 = connected in some respects. 5 = bound up with what people care about most."},
+};
+const RDIMS = Object.keys(RATINGS);
 const CONF_TIPS = {
-  HIGH:   {h:"High confidence", b:"The model is highly confident this passage expresses a general belief about suffering."},
-  MEDIUM: {h:"Medium confidence", b:"The model has moderate confidence in this classification — human review recommended."},
-  LOW:    {h:"Low confidence", b:"The model is uncertain about this classification — prioritize for human review."},
+  HIGH:   {h:"High confidence",   b:"An independent trained coder would very likely produce the same entries for this passage."},
+  MEDIUM: {h:"Medium confidence", b:"A coder would likely find the same main entries but might add or drop one."},
+  LOW:    {h:"Low confidence",    b:"The passage is ambiguous, or it is unclear whether something is stated or only shown. Low cases go to human review."},
 };
 const TRIGGER_TIPS = {
-  keyword:    {h:"Keyword trigger", b:"This passage was flagged because it contains a direct keyword match (e.g. 'suffer', 'pain', 'anguish', 'torment')."},
-  contextual: {h:"Contextual trigger", b:"Flagged by the screening model as likely expressing a suffering belief — no direct keyword match was found."},
+  keyword:    {h:"Keyword",    b:"The passage contains one of the suffering keywords."},
+  contextual: {h:"No keyword", b:"The passage contains none of the suffering keywords. If it was coded, the screening step selected it."},
 };
+const CODED = ["YES","MAYBE","SKIPPED"];
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
-  rows: [],
-  labeled: null,  // { chunks: {id:{text,index,screen,filter,keyword}}, order:[] }
-  tagF: new Set(),
-  conF: new Set(),
-  q: "",
+  codes: [], themes: [], archive: [], runLog: null,
+  labeled: {},            // chunk_id -> {text, screen, filter, keyword, source, idx}
+  labOrder: {},           // source -> [chunk_id, ...]
+  entries: [], passages: [], pById: {},
+  F: {status:new Set(), source:new Set(), area:new Set(), stance:new Set(),
+      evaluation:new Set(), inevitability:new Set(), intertwinement:new Set()},
+  q: "", view: "passages", sort: {key:"", dir:1}, legacy: false,
 };
+const FKEYS = ["status","source","area","stance",...RDIMS];
+const ENTRY_FKEYS = ["area","stance",...RDIMS];
 
-// ── CSV parser (handles quoted fields) ────────────────────────────────────────
+// ── CSV parser (quoted fields, embedded commas and line breaks) ───────────────
 function parseCSV(raw) {
-  const rows = []; let i = 0, n = raw.length;
+  raw = raw.replace(/^﻿/, "");
+  const rows = []; let i = 0; const n = raw.length;
   function field() {
     if (raw[i] === '"') {
       i++; let v = "";
@@ -257,83 +320,89 @@ function parseCSV(raw) {
     while(i<n&&(raw[i]==='\n'||raw[i]==='\r'))i++;
     return f;
   }
-  const hdr=line();
+  const hdr=line().map(h=>h.trim());
   while(i<n){const v=line();if(v.length<2)continue;const o={};hdr.forEach((h,j)=>o[h]=(v[j]||"").trim());rows.push(o);}
-  return rows;
+  return {hdr, rows};
 }
 
 // ── Labeled file parser ───────────────────────────────────────────────────────
 function parseLabeledFile(raw) {
-  // Normalize line endings
-  raw = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  const chunks = {}, order = [];
-
-  // Find every chunk header "--- chunk_id ---" on its own line
+  raw = raw.replace(/^﻿/, "").replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const src = (raw.match(/^SOURCE:\s+(.*)$/m) || [,""])[1].trim();
+  const chunks = [];
   const headerRe = /^--- ([\w]+) ---$/gm;
-  const headers = [];
-  let m;
-  while ((m = headerRe.exec(raw)) !== null) {
-    headers.push({ id: m[1], pos: m.index + m[0].length }); // pos = after the ---
-  }
-
+  const headers = []; let m;
+  while ((m = headerRe.exec(raw)) !== null) headers.push({id:m[1], start:m.index, pos:m.index + m[0].length});
   headers.forEach((h, i) => {
-    // Content runs from just after this header's \n to just before the next header's ---
-    const start = h.pos + 1; // skip the \n after "--- id ---"
-    const end   = i + 1 < headers.length
-      ? raw.lastIndexOf('\n', headers[i+1].pos - 2) // back up to before the \n before next ---
-      : raw.length;
-    const content = raw.slice(start, end);
+    const content = raw.slice(h.pos + 1, i + 1 < headers.length ? headers[i+1].start : raw.length);
     const lines = content.split('\n');
-
-    // Blank line separates metadata from text
     let blankIdx = lines.findIndex(l => l.trim() === '');
     if (blankIdx === -1) blankIdx = lines.length;
-
     const meta = {};
     lines.slice(0, blankIdx).forEach(l => {
-      const mm = l.match(/^([A-Z][A-Z ]+):\s+(.*)$/);
-      if (mm) meta[mm[1].trim()] = mm[2].trim();
+      const mm = l.match(/^([A-Z][A-Z ]+):\s*(.*)$/);
+      if (mm && !(mm[1].trim() in meta)) meta[mm[1].trim()] = mm[2].trim();
     });
-
-    // Text runs from after blank line until the 80-dash separator
     const textLines = [];
     for (let j = blankIdx + 1; j < lines.length; j++) {
       if (/^-{20,}$/.test(lines[j])) break;
       textLines.push(lines[j]);
     }
-
-    order.push(h.id);
-    chunks[h.id] = {
-      text: textLines.join('\n').trim(),
-      index: order.length - 1,
-      screen: meta['SCREEN'] || '',
-      filter: meta['FILTER'] || 'N/A',
-      keyword: meta['KEYWORD'] || '',
-    };
+    chunks.push({
+      id: h.id, text: textLines.join('\n').trim(), source: src,
+      screen: meta['SCREEN'] || '', filter: meta['FILTER'] || 'N/A',
+      keyword: (meta['KEYWORD'] || '').replace(/\s*\[T\d+\]/g, ''),
+      confidence: meta['CONFIDENCE'] || '',
+    });
   });
-
-  console.log(`[viewer] parsed ${order.length} chunks from labeled file`);
-  return { chunks, order };
+  return {source: src, chunks};
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const parseTags = s => (s||"").split(",").map(x=>parseInt(x.trim())).filter(n=>!isNaN(n));
-const parseList = s => (s||"").split(",").map(x=>x.trim()).filter(Boolean);
-const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-function mkel(tag, attrs={}, style={}) {
+const esc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const tipAttr = o => esc(JSON.stringify(o||{}));
+const nice = s => String(s||"").replace(/_/g," ");
+const $ = id => document.getElementById(id);
+function mkel(tag, attrs={}) {
   const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
   Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
-  Object.assign(e.style, style);
   return e;
 }
+// Same folding as the pipeline's quote check: spacing, typographic quotes, dashes, ellipses.
+function fold(s) {
+  const out = [], map = []; let sp = true;
+  for (let i = 0; i < s.length; i++) {
+    let c = s[i];
+    if (c==='“'||c==='”') c = '"';
+    else if (c==='‘'||c==='’') c = "'";
+    else if (c==='—'||c==='–') c = '-';
+    else if (c==='…') { out.push('.','.','.'); map.push(i,i,i); sp = false; continue; }
+    if (/\s/.test(c)) { if (!sp) { out.push(' '); map.push(i); sp = true; } continue; }
+    if (c==='-' && out[out.length-1]==='-') continue;
+    out.push(c); map.push(i); sp = false;
+  }
+  if (out[out.length-1]===' ') { out.pop(); map.pop(); }
+  return {t: out.join(''), map};
+}
+function foldedText(p) { if (!p._fold) p._fold = fold(p.text); return p._fold; }
+// Position of an evidence quote in the passage text: [start, end) or null.
+function locate(p, evidence) {
+  if (!evidence || !p.text) return null;
+  const ft = foldedText(p), fe = fold(evidence).t;
+  if (!fe) return null;
+  const k = ft.t.indexOf(fe);
+  if (k < 0) return null;
+  return [ft.map[k], ft.map[k + fe.length - 1] + 1];
+}
+const stanceKey = e => e.kind === "depicted" ? "depicted" : (STANCES[e.stance] ? e.stance : "none");
+const ratingKey = v => (v === "" || v == null) ? "NA" : String(v);
 
-// ── Tooltip helpers ───────────────────────────────────────────────────────────
-const TT = document.getElementById("tip");
-function showTip(e, tipObj) {
-  if (!tipObj) return;
-  TT.innerHTML = (tipObj.h ? `<strong>${esc(tipObj.h)}</strong>` : "") + esc(tipObj.b || tipObj);
-  TT.style.display = "block";
-  moveTip(e);
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+const TT = $("tip");
+function showTip(e, o) {
+  if (!o || (!o.h && !o.b)) return;
+  TT.innerHTML = (o.h ? `<strong>${esc(o.h)}</strong>` : "") + esc(o.b || "");
+  TT.style.display = "block"; moveTip(e);
 }
 function moveTip(e) {
   const pad = 14, w = TT.offsetWidth, h = TT.offsetHeight;
@@ -341,471 +410,512 @@ function moveTip(e) {
   if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
   if (y < 8) y = 8;
   if (y + h > window.innerHeight - 8) y = window.innerHeight - h - 8;
-  TT.style.left = x + "px";
-  TT.style.top  = y + "px";
+  TT.style.left = x + "px"; TT.style.top = y + "px";
 }
 function hideTip() { TT.style.display = "none"; }
 document.addEventListener("mousemove", e => { if (TT.style.display==="block") moveTip(e); });
-
-// data-tip delegation on cards area
 document.addEventListener("mouseover", e => {
-  const el = e.target.closest("[data-tip]");
+  const el = e.target.closest && e.target.closest("[data-tip]");
   if (el) { try { showTip(e, JSON.parse(el.dataset.tip)); } catch(_){} }
 });
-document.addEventListener("mouseout", e => {
-  if (e.target.closest("[data-tip]")) hideTip();
-});
+document.addEventListener("mouseout", e => { if (e.target.closest && e.target.closest("[data-tip]")) hideTip(); });
 
-// ── Cross-filtered row sets ───────────────────────────────────────────────────
-function getRows({noTag=false, noCon=false}={}) {
-  return S.rows.filter(r => {
-    if (!noTag && S.tagF.size > 0 && !parseTags(r.tags).some(t=>S.tagF.has(t))) return false;
-    if (!noCon && S.conF.size > 0 && !parseList(r.constructs).some(c=>S.conF.has(c))) return false;
-    if (S.q) {
-      const hay=[r.core_belief,r.text_excerpt,r.keyword,r.tag_names,r.constructs,r.new_candidate_label].join(" ").toLowerCase();
-      if (!hay.includes(S.q)) return false;
-    }
-    return true;
+// ── Build passages and entries from whatever has been loaded ──────────────────
+function rebuild() {
+  const entries = [];
+  S.codes.forEach(r => entries.push({
+    kind: r.stance === "depicts" ? "depicted" : "stated",
+    chunk_id: r.chunk_id, source: r.source, n: r.belief_n,
+    label: r.label, definition: r.definition, stance: r.stance, evidence: r.evidence,
+    verbatimCsv: r.evidence_verbatim, area: r.area || "", area_note: r.area_note || "",
+    // Depicted themes carry no ratings; runs before the split rated some, and those are not shown.
+    evaluation: r.stance === "depicts" ? "" : (r.rating_evaluation || ""),
+    inevitability: r.stance === "depicts" ? "" : (r.rating_inevitability || ""),
+    intertwinement: r.stance === "depicts" ? "" : (r.rating_intertwinement || ""),
+    reason: r.stance === "depicts" ? "" : (r.rating_reason || ""),
+    confidence: r.confidence || "",
+  }));
+  S.themes.forEach(r => entries.push({
+    kind: "depicted", chunk_id: r.chunk_id, source: r.source, n: r.theme_n,
+    label: r.label, definition: r.definition, stance: "", evidence: r.evidence,
+    verbatimCsv: r.evidence_verbatim, area: r.area || "", area_note: r.area_note || "",
+    evaluation: "", inevitability: "", intertwinement: "", reason: "", confidence: r.confidence || "",
+  }));
+
+  const pById = {}, sources = [];
+  const get = (id, source) => {
+    if (!pById[id]) pById[id] = {id, source: source || "", entries: [], arch: null, lab: null};
+    if (source && !pById[id].source) pById[id].source = source;
+    return pById[id];
+  };
+  Object.values(S.labeled).forEach(c => { get(c.id, c.source).lab = c; });
+  S.archive.forEach(r => { get(r.chunk_id, r.source).arch = r; });
+  entries.forEach(e => { const p = get(e.chunk_id, e.source); p.entries.push(e); e.p = p; });
+
+  const passages = Object.values(pById);
+  passages.forEach(p => { if (!sources.includes(p.source)) sources.push(p.source); });
+  sources.sort();
+  passages.sort((a,b) => (sources.indexOf(a.source) - sources.indexOf(b.source)) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  passages.forEach(p => {
+    const a = p.arch || {}, l = p.lab;
+    p.text = l ? l.text : (a.text_excerpt || "");
+    p.fullText = !!l;
+    p.screen = l ? l.screen : (a.screen || "");
+    p.filter = l ? l.filter : (a.filter_decision || "");
+    p.keyword = l ? (l.keyword === "none" ? "" : l.keyword) : ((a.keyword === "contextual" || a.keyword === "none") ? "" : (a.keyword || ""));
+    p.confidence = (a.confidence || (l && l.confidence) || (p.entries[0] && p.entries[0].confidence) || "").toUpperCase();
+    p.entries.sort((x,y) => (x.kind === y.kind ? (parseInt(x.n)||0) - (parseInt(y.n)||0) : (x.kind === "stated" ? -1 : 1)));
+    const coded = l ? CODED.includes((l.filter||"").toUpperCase()) : (!!p.arch || p.entries.length > 0);
+    p.status = p.entries.some(e => e.kind === "stated") ? "stated"
+             : p.entries.some(e => e.kind === "depicted") ? "depicted"
+             : coded ? "none" : "uncoded";
+    p.entries.forEach(e => {
+      e.range = p.fullText ? locate(p, e.evidence) : null;
+      e.verbatim = !e.evidence ? "" : p.fullText ? (e.range ? "yes" : "no") : (e.verbatimCsv || "");
+    });
+    p.hay = [p.id, p.source, p.keyword, a.core_belief, a.tag_names, p.text,
+             ...p.entries.flatMap(e => [e.label, e.definition, e.evidence, e.area, e.area_note, stanceKey(e)])]
+            .join(" ").toLowerCase();
   });
+
+  S.entries = entries; S.passages = passages; S.pById = pById; S.sources = sources;
+  S.legacy = !entries.length && S.archive.some(r => (r.tags || "").trim() !== "");
 }
 
+// ── Filters ───────────────────────────────────────────────────────────────────
+function entryPass(e, skip) {
+  if (skip !== "area" && S.F.area.size && !S.F.area.has(e.area)) return false;
+  if (skip !== "stance" && S.F.stance.size && !S.F.stance.has(stanceKey(e))) return false;
+  for (const d of RDIMS) {
+    if (skip !== d && S.F[d].size && !(e.kind === "stated" && S.F[d].has(ratingKey(e[d])))) return false;
+  }
+  return true;
+}
+const entryFiltersOn = skip => ENTRY_FKEYS.some(k => k !== skip && S.F[k].size > 0);
+function passagePass(p, skip) {
+  if (skip !== "status") {
+    if (S.F.status.size ? !S.F.status.has(p.status) : p.status === "uncoded") return false;
+  }
+  if (skip !== "source" && S.F.source.size && !S.F.source.has(p.source)) return false;
+  if (entryFiltersOn(skip) && !p.entries.some(e => entryPass(e, skip))) return false;
+  if (S.q && !p.hay.includes(S.q)) return false;
+  return true;
+}
+function toggle(key, val) { S.F[key].has(val) ? S.F[key].delete(val) : S.F[key].add(val); render(); }
+
 // ── Bar chart (SVG) ───────────────────────────────────────────────────────────
-function drawBarChart(svgNode, items, selSet, colorFn, onToggle, tipFn) {
+function drawBarChart(svgNode, items, selSet, onToggle) {
   svgNode.innerHTML = "";
-  if (!items.length) return;
-  const LW=115, BW=98, BH=15, GAP=5, W=LW+BW+22, H=items.length*(BH+GAP)+2;
-  svgNode.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const LW=128, BW=92, BH=15, GAP=5, W=LW+BW+26, H=Math.max(items.length*(BH+GAP)+2, 0);
+  svgNode.setAttribute("viewBox",`0 0 ${W} ${H || 1}`);
   svgNode.setAttribute("height", H);
+  if (!items.length) return;
   const max = Math.max(...items.map(d=>d.count), 1);
   const hasFilter = selSet.size > 0;
   items.forEach((d,i) => {
-    const y = i*(BH+GAP);
-    const bw = Math.max(2, (d.count/max)*BW);
-    const sel = selSet.has(d.key);
-    const dim = hasFilter && !sel;
-    const g = svgNode.appendChild(mkel("g",{"transform":`translate(0,${y})`}));
-    g.style.cursor = "pointer";
-    g.style.opacity = dim ? "0.3" : "1";
-    // label
-    const lbl = g.appendChild(mkel("text",{x:LW-4,y:BH/2+4,"text-anchor":"end","font-size":"10","font-family":"-apple-system,sans-serif","fill":sel?"#111":"#666"}));
-    if(sel) lbl.style.fontWeight="600";
-    lbl.textContent = d.label;
-    // bar
-    const bar = g.appendChild(mkel("rect",{x:LW,y:2,width:bw,height:BH-4,rx:3,fill:colorFn(d)}));
-    if(sel) bar.setAttribute("stroke", colorFn(d)), bar.setAttribute("stroke-width","1.5");
-    // count
-    const ct = g.appendChild(mkel("text",{x:LW+bw+4,y:BH/2+4,"font-size":"9.5","font-family":"-apple-system,sans-serif","fill":"#bbb"}));
+    const y = i*(BH+GAP), bw = Math.max(2, (d.count/max)*BW);
+    const sel = selSet.has(d.key), dim = hasFilter && !sel;
+    const g = svgNode.appendChild(mkel("g",{transform:`translate(0,${y})`}));
+    g.style.cursor = "pointer"; g.style.opacity = dim ? "0.3" : "1";
+    const lbl = g.appendChild(mkel("text",{x:LW-4,y:BH/2+4,"text-anchor":"end","font-size":"10","font-family":"-apple-system,sans-serif",fill:sel?"#111":"#555"}));
+    if (sel) lbl.style.fontWeight = "600";
+    lbl.textContent = d.label.length > 24 ? d.label.slice(0,23) + "…" : d.label;
+    g.appendChild(mkel("rect",{x:0,y:0,width:W,height:BH,fill:"transparent"}));
+    const bar = g.appendChild(mkel("rect",{x:LW,y:2,width:bw,height:BH-4,rx:3,fill:d.color||"#888"}));
+    const ct = g.appendChild(mkel("text",{x:LW+bw+4,y:BH/2+4,"font-size":"9.5","font-family":"-apple-system,sans-serif",fill:"#888"}));
     ct.textContent = d.count;
-    g.addEventListener("mouseenter", e =>{ if(!sel) g.style.opacity="0.7"; bar.setAttribute("opacity","0.85"); if(tipFn) showTip(e, tipFn(d)); });
-    g.addEventListener("mousemove",  e =>{ if(tipFn) moveTip(e); });
-    g.addEventListener("mouseleave",  ()=>{ g.style.opacity = dim?"0.3":"1"; bar.removeAttribute("opacity"); hideTip(); });
-    g.addEventListener("click",()=>onToggle(d.key));
+    g.addEventListener("mouseenter", e => { bar.setAttribute("opacity","0.8"); showTip(e, d.tip); });
+    g.addEventListener("mouseleave", () => { bar.removeAttribute("opacity"); hideTip(); });
+    g.addEventListener("click", () => onToggle(d.key));
   });
 }
 
-// ── Co-occurrence heatmap (SVG) ───────────────────────────────────────────────
-function drawCooccur(svgNode, rows) {
+// ── Rating histogram (SVG): bars for 1-5 and "no rating" ──────────────────────
+function drawHist(svgNode, dim, counts) {
   svgNode.innerHTML = "";
-  const allTags = [...new Set(S.rows.flatMap(r=>parseTags(r.tags)))].sort((a,b)=>a-b);
-  const n = allTags.length;
-  if (n < 2) { svgNode.setAttribute("height",0); return; }
-
-  // Build matrix from search-only filtered rows
-  const mat = {};
-  rows.forEach(r => {
-    const rt = parseTags(r.tags);
-    rt.forEach(t1 => rt.forEach(t2 => {
-      if (t1 !== t2) { const k=`${t1},${t2}`; mat[k]=(mat[k]||0)+1; }
-    }));
+  const keys = ["1","2","3","4","5","NA"], W = 256, H = 54, BW = 30, GAP = 8, X0 = 14, BASE = 38;
+  svgNode.setAttribute("viewBox",`0 0 ${W} ${H}`); svgNode.setAttribute("height", H);
+  const max = Math.max(...keys.map(k => counts[k]||0), 1);
+  const sel = S.F[dim], hasFilter = sel.size > 0;
+  keys.forEach((k,i) => {
+    const c = counts[k]||0, h = c ? Math.max(2, (c/max)*26) : 0, x = X0 + i*(BW+GAP) + (k==="NA" ? 10 : 0);
+    const g = svgNode.appendChild(mkel("g",{}));
+    g.style.cursor = "pointer"; g.style.opacity = hasFilter && !sel.has(k) ? "0.3" : "1";
+    g.appendChild(mkel("rect",{x:x,y:0,width:BW,height:H,fill:"transparent"}));
+    g.appendChild(mkel("rect",{x:x,y:BASE-h,width:BW,height:h,rx:2,fill:k==="NA"?"#cfcbc0":"#6b7a8f"}));
+    const ct = g.appendChild(mkel("text",{x:x+BW/2,y:BASE-h-2,"text-anchor":"middle","font-size":"9","font-family":"-apple-system,sans-serif",fill:"#888"}));
+    ct.textContent = c || "";
+    const lb = g.appendChild(mkel("text",{x:x+BW/2,y:BASE+11,"text-anchor":"middle","font-size":"9.5","font-family":"-apple-system,sans-serif",fill:sel.has(k)?"#111":"#666"}));
+    if (sel.has(k)) lb.style.fontWeight = "600";
+    lb.textContent = k==="NA" ? "–" : k;
+    const tip = {h:`${RATINGS[dim].label}: ${k==="NA"?"no rating":k}`, b:`${c} stated belief${c===1?"":"s"}. ${RATINGS[dim].b}`};
+    g.addEventListener("mouseenter", e => showTip(e, tip));
+    g.addEventListener("mouseleave", hideTip);
+    g.addEventListener("click", () => toggle(dim, k));
   });
-  const maxV = Math.max(...Object.values(mat), 1);
-
-  const CS = Math.max(18, Math.floor((256 - 60) / n)); // cell size
-  const LP = 56, TP = 60; // left pad, top pad
-  const W = LP + n*CS, H = TP + n*CS;
-  svgNode.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  svgNode.setAttribute("height", H);
-
-  // Column labels (rotated)
-  allTags.forEach((t,j) => {
-    const lbl = svgNode.appendChild(mkel("text",{
-      transform:`translate(${LP+j*CS+CS/2},${TP-5}) rotate(-40)`,
-      "text-anchor":"start","font-size":"8.5","font-family":"-apple-system,sans-serif","fill":"#888"
-    }));
-    lbl.textContent = TAGS[t]?.short || `T${t}`;
-  });
-  // Row labels
-  allTags.forEach((t,i) => {
-    const lbl = svgNode.appendChild(mkel("text",{
-      x:LP-4, y:TP+i*CS+CS/2+3,
-      "text-anchor":"end","font-size":"8.5","font-family":"-apple-system,sans-serif","fill":"#888"
-    }));
-    lbl.textContent = TAGS[t]?.short || `T${t}`;
-  });
-
-  // Cells
-  allTags.forEach((t1,i) => {
-    allTags.forEach((t2,j) => {
-      if (t1 === t2) {
-        const r = svgNode.appendChild(mkel("rect",{x:LP+j*CS,y:TP+i*CS,width:CS-1,height:CS-1,rx:2,fill:"#f5f5f5"}));
-        return;
-      }
-      const count = mat[`${t1},${t2}`] || 0;
-      const alpha = count > 0 ? 0.1 + 0.9*(count/maxV) : 0;
-      const isBothSel = S.tagF.has(t1) && S.tagF.has(t2);
-      const cell = svgNode.appendChild(mkel("g",{}));
-      cell.style.cursor = count > 0 ? "pointer" : "default";
-
-      const fill = count > 0 ? `rgba(41,128,185,${alpha.toFixed(2)})` : "#f9f9f9";
-      const rect = cell.appendChild(mkel("rect",{
-        x:LP+j*CS, y:TP+i*CS, width:CS-1, height:CS-1, rx:2, fill,
-      }));
-      if (isBothSel) { rect.setAttribute("stroke","#c0392b"); rect.setAttribute("stroke-width","2"); }
-
-      if (count > 0) {
-        const txt = cell.appendChild(mkel("text",{
-          x:LP+j*CS+CS/2, y:TP+i*CS+CS/2+3,
-          "text-anchor":"middle","font-size":"8","font-family":"-apple-system,sans-serif",
-          "fill": alpha > 0.55 ? "#fff" : "#555", "pointer-events":"none"
-        }));
-        txt.textContent = count;
-        const tip2 = {h:`${TAGS[t1]?.short} + ${TAGS[t2]?.short}`, b:`${count} passage${count===1?"":"s"} express both beliefs. Click to filter.`};
-        cell.addEventListener("mouseenter", e =>{ rect.setAttribute("opacity","0.8"); showTip(e, tip2); });
-        cell.addEventListener("mousemove",  e => moveTip(e));
-        cell.addEventListener("mouseleave",  ()=>{ rect.removeAttribute("opacity"); hideTip(); });
-        cell.addEventListener("click",()=>{
-          S.tagF.clear(); S.tagF.add(t1); S.tagF.add(t2); render();
-        });
-      }
-    });
-  });
+  svgNode.appendChild(mkel("line",{x1:X0-4,y1:BASE+.5,x2:W-6,y2:BASE+.5,stroke:"#e2dfd8"}));
 }
 
-// ── Render charts ─────────────────────────────────────────────────────────────
+// ── Charts ────────────────────────────────────────────────────────────────────
 function renderCharts() {
-  // Tag chart: rows filtered by conF + q (not tagF)
-  const forTags = getRows({noTag:true});
-  const tagCounts = {};
-  forTags.forEach(r => parseTags(r.tags).forEach(t => tagCounts[t]=(tagCounts[t]||0)+1));
-  const tagItems = Object.entries(TAGS)
-    .map(([t,info])=>({key:parseInt(t),label:info.label,count:tagCounts[t]||0}))
-    .filter(d=>d.count>0 || S.tagF.has(d.key))
-    .sort((a,b)=>b.count-a.count);
-  drawBarChart(
-    document.getElementById("ch-tags"), tagItems, S.tagF,
-    d=>TAGS[d.key]?.color||"#888",
-    key=>{ S.tagF.has(key)?S.tagF.delete(key):S.tagF.add(key); render(); },
-    d=>TAG_TIPS[d.key]
-  );
+  // Passages by status
+  const sc = {};
+  S.passages.filter(p => passagePass(p,"status")).forEach(p => sc[p.status] = (sc[p.status]||0)+1);
+  drawBarChart($("ch-status"),
+    Object.keys(STATUS).map(k => ({key:k,label:STATUS[k].label,count:sc[k]||0,color:STATUS[k].color,tip:{h:STATUS[k].label,b:STATUS[k].b}}))
+      .filter(d => d.count > 0 || S.F.status.has(d.key)),
+    S.F.status, k => toggle("status", k));
 
-  // Construct chart: rows filtered by tagF + q (not conF)
-  const forCons = getRows({noCon:true});
-  const conCounts = {};
-  forCons.forEach(r => parseList(r.constructs).forEach(c => conCounts[c]=(conCounts[c]||0)+1));
-  const conItems = Object.entries(conCounts)
-    .map(([k,v])=>({key:k,label:k,count:v}))
-    .sort((a,b)=>b.count-a.count)
-    .slice(0,12);
-  drawBarChart(
-    document.getElementById("ch-cons"), conItems, S.conF,
-    ()=>"#888",
-    key=>{ S.conF.has(key)?S.conF.delete(key):S.conF.add(key); render(); },
-    d=>CON_TIPS[d.key]
-  );
+  // Texts
+  const src = {};
+  S.passages.filter(p => passagePass(p,"source")).forEach(p => src[p.source] = (src[p.source]||0)+1);
+  $("sec-source").style.display = S.sources.length > 1 ? "" : "none";
+  drawBarChart($("ch-source"),
+    S.sources.map(s => ({key:s,label:nice(s),count:src[s]||0,color:"#8a8f98",tip:{h:nice(s),b:`${src[s]||0} passages under the current filters.`}}))
+      .filter(d => d.count > 0 || S.F.source.has(d.key)),
+    S.F.source, k => toggle("source", k));
 
-  // Co-occurrence: search-only filtered rows (global picture)
-  const forCooc = getRows({noTag:true,noCon:true});
-  drawCooccur(document.getElementById("ch-cooc"), forCooc);
+  // Areas
+  const ac = {};
+  S.passages.filter(p => passagePass(p,"area")).forEach(p => p.entries.forEach(e => { if (entryPass(e,"area")) ac[e.area] = (ac[e.area]||0)+1; }));
+  drawBarChart($("ch-area"),
+    Object.keys(ac).concat([...S.F.area].filter(k => !(k in ac)))
+      .map(k => { const A = AREAS[k] || {label:nice(k),color:"#888",b:""}; return {key:k,label:A.label,count:ac[k]||0,color:A.color,tip:{h:A.label,b:A.b}}; })
+      .sort((a,b) => b.count - a.count),
+    S.F.area, k => toggle("area", k));
+
+  // Stance
+  const st = {};
+  S.passages.filter(p => passagePass(p,"stance")).forEach(p => p.entries.forEach(e => { if (entryPass(e,"stance")) { const k = stanceKey(e); st[k] = (st[k]||0)+1; } }));
+  drawBarChart($("ch-stance"),
+    Object.keys(STANCES).map(k => ({key:k,label:STANCES[k].label,count:st[k]||0,color:STANCES[k].color,tip:{h:STANCES[k].label,b:STANCES[k].b}}))
+      .filter(d => d.count > 0 || S.F.stance.has(d.key)),
+    S.F.stance, k => toggle("stance", k));
+
+  // Ratings
+  RDIMS.forEach(d => {
+    const rc = {};
+    S.passages.filter(p => passagePass(p,d)).forEach(p => p.entries.forEach(e => {
+      if (e.kind === "stated" && entryPass(e,d)) { const k = ratingKey(e[d]); rc[k] = (rc[k]||0)+1; }
+    }));
+    drawHist($("ch-r-"+d), d, rc);
+  });
 }
 
-// ── Render filter chips ───────────────────────────────────────────────────────
+// ── Chips ─────────────────────────────────────────────────────────────────────
+function chipLabel(key, v) {
+  if (key === "status") return STATUS[v].label;
+  if (key === "source") return nice(v);
+  if (key === "area") return "area: " + (AREAS[v] ? AREAS[v].label : nice(v));
+  if (key === "stance") return STANCES[v].label;
+  return `${RATINGS[key].label} ${v === "NA" ? "–" : v}`;
+}
 function renderChips() {
-  const container = document.getElementById("chips");
-  container.innerHTML = "";
-  const hasFilters = S.tagF.size > 0 || S.conF.size > 0 || S.q;
-
-  S.tagF.forEach(t => {
-    const info = TAGS[t];
+  const box = $("chips"); box.innerHTML = "";
+  let any = false;
+  FKEYS.forEach(key => S.F[key].forEach(v => {
+    any = true;
     const chip = document.createElement("span");
     chip.className = "chip";
-    chip.style.background = info.color;
-    chip.innerHTML = `${esc(info.label)} <button title="Remove">&times;</button>`;
-    chip.querySelector("button").onclick = ()=>{ S.tagF.delete(t); render(); };
-    container.appendChild(chip);
-  });
-  S.conF.forEach(c => {
-    const chip = document.createElement("span");
-    chip.className = "chip con";
-    chip.innerHTML = `${esc(c)} <button title="Remove">&times;</button>`;
-    chip.querySelector("button").onclick = ()=>{ S.conF.delete(c); render(); };
-    container.appendChild(chip);
-  });
-
-  const cb = document.getElementById("clear-btn");
-  cb.classList.toggle("on", S.tagF.size > 0 || S.conF.size > 0);
+    if (key === "area" && AREAS[v]) chip.style.background = AREAS[v].color;
+    if (key === "stance") chip.style.background = STANCES[v].color;
+    chip.innerHTML = `${esc(chipLabel(key, v))} <button title="Remove">&times;</button>`;
+    chip.querySelector("button").onclick = () => toggle(key, v);
+    box.appendChild(chip);
+  }));
+  $("clear-btn").classList.toggle("on", any);
 }
 
-// ── Render cards ──────────────────────────────────────────────────────────────
+// ── Entry (one stated belief or depicted theme) ───────────────────────────────
+function entryHTML(e, dim) {
+  const sk = stanceKey(e), A = AREAS[e.area] || {label:nice(e.area),color:"#888",b:""};
+  const stance = `<span class="st st-${sk}${S.F.stance.has(sk)?" sel":""}" data-f="stance" data-v="${esc(sk)}" data-tip="${tipAttr({h:STANCES[sk].label,b:STANCES[sk].b})}">${esc(STANCES[sk].label)}</span>`;
+  const area = `<span class="ar${S.F.area.has(e.area)?" sel":""}" style="background:${A.color}" data-f="area" data-v="${esc(e.area)}" data-tip="${tipAttr({h:A.label,b:A.b})}">${esc(A.label)}${e.area_note?": "+esc(e.area_note):""}</span>`;
+  const anyRating = RDIMS.some(d => e[d] !== "");
+  const ratings = (e.kind === "stated" && anyRating) ? RDIMS.map(d =>
+    `<span class="rt${e[d]===""?" na":""}" data-tip="${tipAttr({h:RATINGS[d].label,b:RATINGS[d].b})}">${RATINGS[d].label} ${e[d]===""?"–":esc(e[d])}</span>`).join("") : "";
+  const nv = e.verbatim === "no" ? `<span class="nv" data-tip="${tipAttr({h:"Quote check",b:"This quote was not found word for word in the passage. Check it against the text."})}">quote not found verbatim</span>` : "";
+  return `<div class="entry ${e.kind}${dim?" dim":""}">
+    <div class="e-head"><span class="e-label">${esc(e.label||"—")}</span>${stance}${area}${ratings}</div>
+    <div class="e-def">${esc(e.definition)}</div>
+    ${e.evidence?`<div class="e-ev">“${esc(e.evidence)}”${nv}</div>`:""}
+    ${e.reason?`<div class="e-reason">Rating basis: ${esc(e.reason)}</div>`:""}
+  </div>`;
+}
+
+// ── Passage text with the evidence quotes marked ──────────────────────────────
+function markedText(p) {
+  const rs = p.entries.filter(e => e.range).map(e => ({s:e.range[0], t:e.range[1], e})).sort((a,b) => a.s - b.s);
+  let out = "", pos = 0;
+  rs.forEach(r => {
+    if (r.s < pos) return;                       // overlapping quote: keep the first
+    out += esc(p.text.slice(pos, r.s));
+    out += `<mark class="${r.e.kind}" data-tip="${tipAttr({h:r.e.label,b:r.e.definition})}">${esc(p.text.slice(r.s, r.t))}</mark>`;
+    pos = r.t;
+  });
+  return out + esc(p.text.slice(pos));
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+function shownPassages() { return S.passages.filter(p => passagePass(p)); }
+function renderCount(rows) {
+  const all = S.F.status.has("uncoded");
+  const total = all ? S.passages.length : S.passages.filter(p => p.status !== "uncoded").length;
+  const efOn = entryFiltersOn();
+  let nb = 0, nt = 0;
+  rows.forEach(p => p.entries.forEach(e => { if (!efOn || entryPass(e)) (e.kind === "stated" ? nb++ : nt++); }));
+  $("result-ct").textContent = `${rows.length} of ${total} ${all?"":"coded "}passages · ${nb} stated belief${nb===1?"":"s"} · ${nt} depicted theme${nt===1?"":"s"}`;
+}
 function renderCards() {
-  const rows = getRows();
-  const container = document.getElementById("cards");
-  container.innerHTML = "";
-  document.getElementById("result-ct").textContent = `${rows.length} of ${S.rows.length} passages`;
+  const rows = shownPassages(), box = $("cards");
+  box.innerHTML = ""; renderCount(rows);
+  if (!rows.length) { box.innerHTML = `<div class="no-results">No passages match the current filters.</div>`; return; }
+  const efOn = entryFiltersOn();
 
-  if (!rows.length) {
-    container.innerHTML = `<div class="no-results">No passages match the current filters.</div>`;
-    return;
-  }
-
-  rows.forEach(r => {
+  rows.forEach(p => {
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card"; card.id = "card-" + p.id;
+    const a = p.arch || {};
+    const conf = p.confidence, confCls = conf==="HIGH"?"hi":conf==="MEDIUM"?"med":conf==="LOW"?"lo":"";
+    const isKw = !!p.keyword;
+    const stated = p.entries.filter(e => e.kind === "stated"), depicted = p.entries.filter(e => e.kind === "depicted");
+    const filt = (p.filter||"").toUpperCase();
+    const short = p.text.length > 350 ? p.text.slice(0,350) + "…" : p.text;
+    const hasMore = p.text.length > 350 || p.entries.some(e => e.range);
 
-    // tag chips
-    const tagChips = parseTags(r.tags).map(t => {
-      const info = TAGS[t];
-      if (!info) return "";
-      const sel = S.tagF.has(t);
-      const tip = JSON.stringify(TAG_TIPS[t]||{}).replace(/"/g,"&quot;");
-      return `<span class="tc${sel?" ring":""}" style="background:${info.color}" data-t="${t}" data-tip="${tip}">${esc(info.label)}</span>`;
-    }).join("");
-
-    // construct chips
-    const conChips = parseList(r.constructs).map(c => {
-      const tip = JSON.stringify(CON_TIPS[c]||{h:c,b:"A dimension of how suffering beliefs are structured."}).replace(/"/g,"&quot;");
-      return `<span class="con-chip${S.conF.has(c)?" sel":""}" data-c="${esc(c)}" data-tip="${tip}">${esc(c)}</span>`;
-    }).join("");
-
-    // badges
-    const conf = (r.confidence||"").toUpperCase();
-    const confCls = conf==="HIGH"?"hi":conf==="MEDIUM"?"med":conf==="LOW"?"lo":"";
-    const isKw = r.filter_trigger==="keyword";
-    const confTip = JSON.stringify(CONF_TIPS[conf]||{}).replace(/"/g,"&quot;");
-    const trigTip = JSON.stringify(TRIGGER_TIPS[isKw?"keyword":"contextual"]).replace(/"/g,"&quot;");
-    const excerptFull = (r.text_excerpt||"").trim();
-    const excerptShort = excerptFull.length > 350 ? excerptFull.slice(0,350)+"…" : excerptFull;
-    const hasMore = excerptFull.length > 350;
+    let body = "";
+    if (stated.length) body += `<div class="sec-h">Stated beliefs</div>` + stated.map(e => entryHTML(e, efOn && !entryPass(e))).join("");
+    if (depicted.length) body += `<div class="sec-h">Depicted themes <em>· the coder's reading; nobody in the passage states these</em></div>` + depicted.map(e => entryHTML(e, efOn && !entryPass(e))).join("");
+    if (!p.entries.length) {
+      body += p.status === "uncoded"
+        ? `<div class="none-found">Not coded${filt==="NO"?" (the filter step rejected this passage)":p.screen==="NO"?" (the screen step judged it not to be about suffering)":""}.</div>`
+        : (a.core_belief || a.tag_names) ? "" : `<div class="none-found">Coded. No stated belief and no depicted theme was recorded.</div>`;
+    }
+    if (a.core_belief) body += `<div class="legacy-line"><span>Filter step summary:</span> ${esc(a.core_belief)}</div>`;
+    if (a.tag_names)   body += `<div class="legacy-line"><span>Fixed-list tags:</span> ${esc(a.tag_names)}</div>`;
 
     card.innerHTML = `
       <div class="card-body">
         <div class="card-top">
-          <span class="cid">${esc(r.chunk_id)}</span>
+          <span><span class="cid">${esc(p.id)}</span><span class="csrc">${esc(nice(p.source))}</span></span>
           <div class="badges">
-            ${conf?`<span class="badge ${confCls}" data-tip="${confTip}">${conf}</span>`:""}
-            <span class="badge${isKw?" kw":""}" data-tip="${trigTip}">${isKw?`kw: ${esc(r.keyword)}`:"contextual"}</span>
+            ${conf?`<span class="badge ${confCls}" data-tip="${tipAttr(CONF_TIPS[conf])}">${esc(conf)}</span>`:""}
+            <span class="badge${isKw?" kw":""}" data-tip="${tipAttr(TRIGGER_TIPS[isKw?"keyword":"contextual"])}">${isKw?`kw: ${esc(p.keyword)}`:"no keyword"}</span>
+            ${p.screen?`<span class="badge">screen: ${esc(p.screen)}</span>`:""}
+            ${filt && filt!=="SKIPPED" && filt!=="N/A"?`<span class="badge">filter: ${esc(filt)}</span>`:""}
           </div>
         </div>
-        <div class="belief">${esc(r.core_belief||"—")}</div>
-        <div class="tags">${tagChips}</div>
-        ${conChips?`<div class="cons"><span class="con-lbl">constructs:</span>${conChips}</div>`:""}
-        <div>
-          <div class="excerpt" id="ex-${esc(r.chunk_id)}">${esc(excerptShort)}</div>
-          ${hasMore?`<button class="more-btn" data-full="${esc(excerptFull)}" data-short="${esc(excerptShort)}" data-id="${esc(r.chunk_id)}">show more</button>`:""}
-        </div>
-        ${r.new_candidate_label?`<div class="nc-box"><strong>New candidate: ${esc(r.new_candidate_label)}</strong> ${esc(r.new_candidate_definition)}</div>`:""}
+        ${body}
+        ${p.text?`<div>
+          <div class="excerpt">${esc(short)}</div>
+          ${hasMore?`<button class="more-btn">${p.fullText?"show full passage with quotes marked":"show more"}</button>`:""}
+          ${!p.fullText?`<div class="chart-hint">First 300 characters only. Add the labeled .txt file for the full passage.</div>`:""}
+        </div>`:""}
       </div>
-      <button class="ctx-toggle" data-id="${esc(r.chunk_id)}"><span class="ctx-arrow">▶</span> Show in context</button>
-      <div class="ctx-body" id="ctx-${esc(r.chunk_id)}"></div>
+      ${p.fullText?`<button class="ctx-toggle"><span class="ctx-arrow">▶</span> Show neighbouring passages</button><div class="ctx-body"></div>`:""}
     `;
 
-    // tag chip clicks
-    card.querySelectorAll(".tc").forEach(el => {
-      el.addEventListener("click", () => {
-        const t = parseInt(el.dataset.t);
-        S.tagF.has(t) ? S.tagF.delete(t) : S.tagF.add(t);
-        render();
-      });
-    });
-    // construct chip clicks
-    card.querySelectorAll(".con-chip").forEach(el => {
-      el.addEventListener("click", () => {
-        const c = el.dataset.c;
-        S.conF.has(c) ? S.conF.delete(c) : S.conF.add(c);
-        render();
-      });
-    });
-    // show more/less excerpt
+    card.querySelectorAll("[data-f]").forEach(el => el.addEventListener("click", () => toggle(el.dataset.f, el.dataset.v)));
     const moreBtn = card.querySelector(".more-btn");
     if (moreBtn) {
+      const ex = card.querySelector(".excerpt"), closedLabel = moreBtn.textContent; let open = false;
       moreBtn.addEventListener("click", () => {
-        const exEl = document.getElementById(`ex-${r.chunk_id}`);
-        if (moreBtn.textContent === "show more") {
-          exEl.textContent = moreBtn.dataset.full;
-          moreBtn.textContent = "show less";
-        } else {
-          exEl.textContent = moreBtn.dataset.short;
-          moreBtn.textContent = "show more";
-        }
+        open = !open;
+        if (open) ex.innerHTML = markedText(p); else ex.textContent = short;
+        moreBtn.textContent = open ? "show less" : closedLabel;
       });
     }
-    // context toggle
     const ctxBtn = card.querySelector(".ctx-toggle");
-    ctxBtn.addEventListener("click", () => {
-      ctxBtn.classList.toggle("open");
-      const body = document.getElementById(`ctx-${r.chunk_id}`);
-      if (!body) return;
-      body.classList.toggle("open");
-      if (body.classList.contains("open") && !body.dataset.built) {
-        body.dataset.built = "1";
-        buildContextPanel(body, r.chunk_id);
-      }
+    if (ctxBtn) ctxBtn.addEventListener("click", () => {
+      const bodyEl = card.querySelector(".ctx-body");
+      ctxBtn.classList.toggle("open"); bodyEl.classList.toggle("open");
+      if (bodyEl.classList.contains("open") && !bodyEl.dataset.built) { bodyEl.dataset.built = "1"; buildContext(bodyEl, p); }
     });
-
-    container.appendChild(card);
+    box.appendChild(card);
   });
 }
 
-// ── Build context panel ───────────────────────────────────────────────────────
-function buildContextPanel(container, chunkId) {
-  // Find the CSV row for this chunk to show its full excerpt as fallback
-  const row = S.rows.find(r => r.chunk_id === chunkId);
-  const excerptFallback = row ? `
-    <div class="ctx-chunk current">
+// ── Neighbouring passages ─────────────────────────────────────────────────────
+function buildContext(container, p) {
+  const order = S.labOrder[p.source] || [], idx = order.indexOf(p.id);
+  if (idx < 0) { container.innerHTML = `<div class="ctx-not-loaded">This passage is not in the loaded labeled files.</div>`; return; }
+  const block = id => {
+    const q = S.pById[id]; if (!q) return "";
+    const txt = q.text.length > 500 ? q.text.slice(0,500) + "…" : q.text;
+    const n = q.entries.length;
+    return `<div class="ctx-chunk">
       <div class="ctx-chunk-hdr">
-        <span class="ctx-cid">${esc(chunkId)}</span>
-        <span class="ctx-badge arch">CURRENT (excerpt only)</span>
+        <span class="ctx-cid">${esc(id)}</span>
+        <span class="ctx-badge${q.status==="stated"||q.status==="depicted"?" arch":""}">${esc(STATUS[q.status].label)}${n?` (${n})`:""}</span>
+        ${q.screen?`<span class="ctx-badge">screen: ${esc(q.screen)}</span>`:""}
+        ${q.keyword?`<span class="ctx-badge">kw: ${esc(q.keyword)}</span>`:""}
       </div>
-      <div class="ctx-chunk-txt">${esc(row.text_excerpt || '')}</div>
-    </div>` : "";
-
-  if (!S.labeled) {
-    container.innerHTML = `
-      <div class="ctx-not-loaded" style="padding:8px 14px 4px">
-        Load the <strong>_labeled.txt</strong> file (header → "+ Load context file") to see surrounding chunks.
-      </div>
-      ${excerptFallback}`;
-    return;
-  }
-  const { chunks, order } = S.labeled;
-  const cur = chunks[chunkId];
-  if (!cur) {
-    console.warn(`[viewer] chunk "${chunkId}" not found in labeled file. Available: ${order.slice(0,3).join(', ')}...`);
-    container.innerHTML = `
-      <div class="ctx-not-loaded" style="padding:8px 14px 4px">
-        Chunk not found in loaded file — make sure you loaded the correct <em>_labeled.txt</em>.
-      </div>
-      ${excerptFallback}`;
-    return;
-  }
-  const idx = cur.index;
-  const prevIds = order.slice(Math.max(0,idx-2), idx);
-  const nextIds = order.slice(idx+1, idx+3);
-
-  function chunkBlock(id, isCurrent) {
-    const ch = chunks[id];
-    if (!ch) return "";
-    const isArch = ["YES","MAYBE"].includes((ch.filter||"").toUpperCase());
-    const filterLabel = ch.filter === "N/A" ? "not screened" : `filter: ${ch.filter}`;
-    const archBadge = isArch ? ` <span class="ctx-badge arch">ARCHIVED</span>` : "";
-    const maybeBadge = ch.filter==="MAYBE"?` <span class="ctx-badge maybe">MAYBE</span>`:"";
-    const kw = ch.keyword && ch.keyword!=="none" ? ` <span class="ctx-badge">kw: ${esc(ch.keyword)}</span>` : "";
-    const displayText = isCurrent ? ch.text : (ch.text.length > 500 ? ch.text.slice(0,500)+"…" : ch.text);
-    return `
-      <div class="ctx-chunk${isCurrent?" current":""}">
-        <div class="ctx-chunk-hdr">
-          <span class="ctx-cid">${esc(id)}</span>
-          <span class="ctx-badge">screen: ${esc(ch.screen)}</span>
-          <span class="ctx-badge">${esc(filterLabel)}</span>
-          ${archBadge}${kw}
-        </div>
-        <div class="ctx-chunk-txt">${esc(displayText)}</div>
-      </div>`;
-  }
-
-  container.innerHTML =
-    prevIds.map(id => chunkBlock(id, false)).join("") +
-    chunkBlock(chunkId, true) +
-    nextIds.map(id => chunkBlock(id, false)).join("");
+      <div class="ctx-chunk-txt">${esc(txt)}</div>
+    </div>`;
+  };
+  const prev = order.slice(Math.max(0, idx-2), idx), next = order.slice(idx+1, idx+3);
+  container.innerHTML = prev.map(block).join("")
+    + `<div class="ctx-chunk current"><div class="ctx-chunk-hdr"><span class="ctx-cid">${esc(p.id)}</span><span class="ctx-badge arch">THIS PASSAGE</span></div></div>`
+    + next.map(block).join("")
+    + (!prev.length && !next.length ? `<div class="ctx-not-loaded">This text has only one passage.</div>` : "");
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
-function render() {
-  renderChips();
-  renderCharts();
-  renderCards();
+// ── Beliefs table ─────────────────────────────────────────────────────────────
+const COLS = [
+  {key:"kind",   label:"Stance",     get:e => STANCES[stanceKey(e)].label},
+  {key:"label",  label:"Label",      get:e => e.label},
+  {key:"definition", label:"Definition", get:e => e.definition},
+  {key:"area",   label:"Area",       get:e => (AREAS[e.area]||{label:nice(e.area)}).label},
+  {key:"evaluation",     label:"Eval",    num:true, get:e => e.evaluation,     tip:RATINGS.evaluation},
+  {key:"inevitability",  label:"Inev",    num:true, get:e => e.inevitability,  tip:RATINGS.inevitability},
+  {key:"intertwinement", label:"Intertw", num:true, get:e => e.intertwinement, tip:RATINGS.intertwinement},
+  {key:"source", label:"Text",       get:e => nice(e.source)},
+];
+function renderTable() {
+  const rows = shownPassages(), wrap = $("table-wrap"), efOn = entryFiltersOn();
+  renderCount(rows);
+  let es = rows.flatMap(p => p.entries.filter(e => !efOn || entryPass(e)));
+  if (S.sort.key) {
+    const col = COLS.find(c => c.key === S.sort.key), dir = S.sort.dir;
+    es = es.slice().sort((a,b) => {
+      const x = col.get(a), y = col.get(b);
+      if (col.num) return ((x===""?99:+x) - (y===""?99:+y)) * dir;
+      return String(x).localeCompare(String(y)) * dir;
+    });
+  }
+  if (!es.length) { wrap.innerHTML = `<div class="no-results">No beliefs or themes match the current filters.</div>`; return; }
+  const th = COLS.map(c => `<th data-k="${c.key}" class="${S.sort.key===c.key?"sorted":""}"${c.tip?` data-tip="${tipAttr({h:c.tip.label,b:c.tip.b})}"`:""}>${esc(c.label)}${S.sort.key===c.key?(S.sort.dir>0?" ▲":" ▼"):""}</th>`).join("");
+  const tr = es.map((e,i) => {
+    const sk = stanceKey(e), A = AREAS[e.area] || {label:nice(e.area),color:"#888"};
+    return `<tr class="row" data-i="${i}">
+      <td><span class="st st-${sk}">${esc(STANCES[sk].label)}</span></td>
+      <td class="lab">${esc(e.label)}</td>
+      <td>${esc(e.definition)}</td>
+      <td><span class="ar" style="background:${A.color}">${esc(A.label)}</span></td>
+      ${RDIMS.map(d => `<td class="num">${e.kind==="stated" ? (e[d]===""?"–":esc(e[d])) : ""}</td>`).join("")}
+      <td class="src">${esc(nice(e.source))}</td>
+    </tr>`;
+  }).join("");
+  wrap.innerHTML = `<table class="bt"><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`;
+  wrap.querySelectorAll("th").forEach(el => el.addEventListener("click", () => {
+    const k = el.dataset.k;
+    S.sort = S.sort.key === k ? (S.sort.dir > 0 ? {key:k,dir:-1} : {key:"",dir:1}) : {key:k,dir:1};
+    render();
+  }));
+  wrap.querySelectorAll("tr.row").forEach(el => el.addEventListener("click", () => {
+    const e = es[+el.dataset.i];
+    S.view = "passages"; render();
+    const card = $("card-" + e.chunk_id);
+    if (card) { card.scrollIntoView({block:"center"}); card.classList.add("flash"); setTimeout(() => card.classList.remove("flash"), 1600); }
+  }));
 }
 
-// ── Setup header meta ─────────────────────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────────────────────────
 function setupMeta() {
-  const sources = [...new Set(S.rows.map(r=>r.source))];
-  document.getElementById("run-title").textContent =
-    sources.length === 1 ? sources[0].replace(/_/g," ") : `${sources.length} sources`;
-  const d = S.rows[0]?.run_date?.split("T")[0] || "";
-  const m = S.rows[0]?.model_tag || "";
-  document.getElementById("m-date").innerHTML = d ? `<strong>${d}</strong>` : "";
-  document.getElementById("m-model").innerHTML = m ? `model: <strong>${m}</strong>` : "";
-  const n = S.rows.length;
-  const kw = S.rows.filter(r=>r.filter_trigger==="keyword").length;
-  document.getElementById("m-counts").innerHTML = `<strong>${n}</strong> archived · <strong>${kw}</strong> keyword · <strong>${n-kw}</strong> contextual`;
+  const any = S.codes[0] || S.themes[0] || S.archive[0] || {}, log = S.runLog || {};
+  $("run-title").textContent = S.sources.length === 1 ? nice(S.sources[0]) : `${S.sources.length} texts`;
+  const d = (log.run_date || any.run_date || "").split("T")[0];
+  $("m-date").innerHTML = d ? `<strong>${esc(d)}</strong>` : "";
+  const prompts = [log.system_prompt || any.prompt_system, log.tag_prompt || any.prompt_tag, log.rate_prompt || any.prompt_rate].filter(Boolean);
+  $("m-prompts").innerHTML = prompts.length ? `prompts: <strong>${esc(prompts.join(" · "))}</strong>` : "";
+  const coded = S.passages.filter(p => p.status !== "uncoded").length;
+  const nb = S.entries.filter(e => e.kind === "stated").length, nt = S.entries.length - nb;
+  $("m-counts").innerHTML = `<strong>${coded}</strong> coded passages · <strong>${nb}</strong> stated · <strong>${nt}</strong> depicted`;
+  $("m-cost").innerHTML = log.cost_usd != null ? `cost: <strong>$${esc(Number(log.cost_usd).toFixed(2))}</strong>` : "";
+
+  const notes = [];
+  if (S.legacy) notes.push("This archive comes from a run that used the fixed code list (tag_v2 or tag_v3). Open it with viewer_legacy.html to see the tag charts.");
+  if (!S.entries.length && !S.legacy) notes.push("No open_codes.csv or depicted_themes.csv has been loaded, so no beliefs are shown. Use “+ Add files”.");
+  if (S.entries.length && !Object.keys(S.labeled).length) notes.push("The labeled .txt files are not loaded. Passages show their first 300 characters only, and passages with nothing found are missing. Use “+ Add files” and pick the files in the run's labeled folder.");
+  if (S.codes.some(r => r.stance === "depicts")) notes.push("This run predates the split between stated beliefs and depicted themes (run 3 or earlier). Entries with the stance “depicts” are shown as depicted themes.");
+  const el = $("notice"); el.innerHTML = notes.map(esc).join("<br>"); el.classList.toggle("on", notes.length > 0);
+}
+
+function render() {
+  $("v-passages").classList.toggle("on", S.view === "passages");
+  $("v-beliefs").classList.toggle("on", S.view === "beliefs");
+  $("cards").style.display = S.view === "passages" ? "" : "none";
+  $("table-wrap").style.display = S.view === "beliefs" ? "block" : "none";
+  renderChips(); renderCharts();
+  if (S.view === "passages") renderCards(); else renderTable();
 }
 
 // ── File loading ──────────────────────────────────────────────────────────────
-function loadCSV(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
+async function loadFiles(fileList) {
+  const files = [...fileList].filter(f => !f.name.startsWith(".") && /\.(csv|txt|json)$/i.test(f.name));
+  const got = [], skipped = [];
+  for (const f of files) {
+    let raw; try { raw = await f.text(); } catch (_) { skipped.push(f.name); continue; }
+    const name = f.name.toLowerCase();
     try {
-      const rows = parseCSV(e.target.result);
-      if (!rows.length) throw new Error("No rows found");
-      S.rows = rows;
-      document.getElementById("load-screen").style.display = "none";
-      document.getElementById("app").classList.add("on");
-      setupMeta();
-      render();
-    } catch(err) {
-      document.getElementById("load-err").textContent = "Error loading CSV: " + err.message;
-    }
-  };
-  reader.readAsText(file);
-}
-
-function loadLabeled(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      S.labeled = parseLabeledFile(e.target.result);
-      const n = S.labeled.order.length;
-      const btn = document.getElementById("ctx-btn");
-      if (n === 0) {
-        btn.textContent = "⚠ No chunks found";
-        btn.style.borderColor = "#c0392b";
-        btn.style.color = "#c0392b";
-        console.error("[viewer] labeled file parsed but found 0 chunks — check file format");
+      if (name.endsWith(".json")) {
+        const j = JSON.parse(raw);
+        if (j && (j.totals || j.run_date) && !j.results) { S.runLog = j; got.push(f.name); } else skipped.push(f.name);
+      } else if (name.endsWith(".txt")) {
+        if (!/^--- \w+ ---$/m.test(raw.replace(/\r/g, ""))) { skipped.push(f.name); continue; }
+        const L = parseLabeledFile(raw);
+        S.labOrder[L.source] = L.chunks.map(c => c.id);
+        L.chunks.forEach(c => { S.labeled[c.id] = c; });
+        got.push(f.name);
       } else {
-        btn.classList.add("loaded");
-        btn.childNodes[0].textContent = `✓ ${n} chunks loaded`;
-        btn.title = `Loaded: ${file.name} (${n} chunks)`;
+        const {hdr, rows} = parseCSV(raw);
+        if (hdr.includes("cluster")) skipped.push(f.name);
+        else if (hdr.includes("belief_n")) { S.codes = rows; got.push(f.name); }
+        else if (hdr.includes("theme_n")) { S.themes = rows; got.push(f.name); }
+        else if (hdr.includes("text_excerpt") && hdr.includes("chunk_id")) { S.archive = rows; got.push(f.name); }
+        else skipped.push(f.name);
       }
-    } catch(err) {
-      console.error("[viewer] error parsing labeled file:", err);
-      const btn = document.getElementById("ctx-btn");
-      btn.textContent = "⚠ Parse error";
-      btn.style.color = "#c0392b";
-    }
-    // Rebuild any open context panels with the new data
-    document.querySelectorAll(".ctx-body[data-built]").forEach(el => {
-      delete el.dataset.built;
-      if (el.classList.contains("open")) buildContextPanel(el, el.id.replace("ctx-",""));
-    });
-  };
-  reader.readAsText(file);
+    } catch (err) { skipped.push(f.name); }
+  }
+  if (!got.length) {
+    $("load-err").textContent = files.length
+      ? "None of these files is a run output. Expected open_codes.csv, depicted_themes.csv, pilot_archive.csv, run_log.json or *_labeled.txt."
+      : "No .csv, .txt or .json file found.";
+    return;
+  }
+  $("load-err").textContent = "";
+  rebuild();
+  $("load-screen").style.display = "none";
+  $("app").classList.add("on");
+  setupMeta(); render();
 }
 
-// ── Event listeners ───────────────────────────────────────────────────────────
-document.getElementById("csv-file").addEventListener("change", e => { if(e.target.files[0]) loadCSV(e.target.files[0]); });
-document.getElementById("ctx-file").addEventListener("change", e => { if(e.target.files[0]) loadLabeled(e.target.files[0]); });
+// Files from a drop, including the contents of a dropped folder
+async function filesFromDrop(dt) {
+  const entries = [...(dt.items || [])].map(it => it.webkitGetAsEntry ? it.webkitGetAsEntry() : null).filter(Boolean);
+  if (!entries.length) return [...dt.files];
+  const out = [];
+  async function walk(en) {
+    if (en.isFile) out.push(await new Promise((res, rej) => en.file(res, rej)));
+    else if (en.isDirectory) {
+      const rd = en.createReader();
+      for (;;) {
+        const batch = await new Promise((res, rej) => rd.readEntries(res, rej));
+        if (!batch.length) break;
+        for (const b of batch) await walk(b);
+      }
+    }
+  }
+  for (const en of entries) await walk(en);
+  return out;
+}
 
-// Drag & drop on load screen
-const loadScreen = document.getElementById("load-screen");
-loadScreen.addEventListener("dragover", e => { e.preventDefault(); loadScreen.classList.add("drag-over"); });
-loadScreen.addEventListener("dragleave", () => loadScreen.classList.remove("drag-over"));
-loadScreen.addEventListener("drop", e => {
-  e.preventDefault(); loadScreen.classList.remove("drag-over");
-  const f = [...e.dataTransfer.files].find(f => f.name.endsWith(".csv"));
-  if (f) loadCSV(f); else document.getElementById("load-err").textContent = "Drop a .csv file.";
+// ── Events ────────────────────────────────────────────────────────────────────
+["dir-input","file-input","add-input"].forEach(id => $(id).addEventListener("change", e => {
+  if (e.target.files.length) loadFiles(e.target.files);
+  e.target.value = "";
+}));
+document.addEventListener("dragover", e => { e.preventDefault(); document.body.classList.add("drag-over"); });
+document.addEventListener("dragleave", () => document.body.classList.remove("drag-over"));
+document.addEventListener("drop", e => {
+  e.preventDefault(); document.body.classList.remove("drag-over");
+  filesFromDrop(e.dataTransfer).then(loadFiles);
 });
-
-document.getElementById("search").addEventListener("input", e => { S.q = e.target.value.toLowerCase().trim(); render(); });
-document.getElementById("clear-btn").addEventListener("click", () => { S.tagF.clear(); S.conF.clear(); render(); });
+$("search").addEventListener("input", e => { S.q = e.target.value.toLowerCase().trim(); render(); });
+$("clear-btn").addEventListener("click", () => { FKEYS.forEach(k => S.F[k].clear()); render(); });
+$("v-passages").addEventListener("click", () => { S.view = "passages"; render(); });
+$("v-beliefs").addEventListener("click", () => { S.view = "beliefs"; render(); });
 </script>
 </body>
 </html>

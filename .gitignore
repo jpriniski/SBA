@@ -1,0 +1,6 @@
+__pycache__/
+.DS_Store
+results/test_passages_output.json
+texts/local/
+results/*/
+!results/labeled/

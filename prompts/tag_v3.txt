@@ -1,0 +1,32 @@
+Step 4: tagging.
+
+Working classification of candidate suffering beliefs:
+<<CLASSIFICATION>>
+
+Construct dimensions:
+<<CONSTRUCTS>>
+
+<passage>
+<<PASSAGE>>
+</passage>
+
+Core belief from the filter step: "<<CORE_BELIEF>>"
+The core belief is a one-sentence first-pass summary and may be incomplete or wrong. Tag from the passage.
+
+Which candidate belief or beliefs does this passage assert?
+
+Respond with one JSON object, fields in this order:
+{"tags": [integers], "rejects": [integers], "constructs": ["name", ...], "new_candidate": null or {"label": "...", "definition": "..."}, "confidence": "HIGH"|"MEDIUM"|"LOW"}
+
+tags: the number of every code whose definition the passage itself asserts. A passage of this length may assert more than one code, but each tag needs a sentence in the passage that makes that claim. A shared theme, a keyword or the general drift of a scene is not enough. If the passage asserts a qualifying belief that no code fits, use [0].
+
+rejects: the numbers of any codes the passage explicitly denies (a passage saying pain is not a punishment rejects 1). Usually [].
+
+constructs: the dimensions on which the asserted belief or beliefs take a position, written exactly as named in the list above. List a dimension only when the passage says something about it, not because the topic could be related to it.
+
+new_candidate: propose one only when the passage asserts a qualifying belief that none of the code definitions would describe correctly. The proposal must itself pass the five tests: it is not the doctrine of one tradition, not a way of coping, and not a rewording of a listed code. Give a generic label of two to four words and a one-sentence definition in everyday words, written so that the same belief met in a different passage would receive the same label. If it is close to a listed code, say in the definition how it differs. Required when tags is [0]. Otherwise null, unless the passage also asserts a second belief that no code covers. Every proposal is reviewed by the research team.
+
+confidence: how likely an independent trained coder, reading only this passage, would assign the same tags.
+HIGH: very likely the same tags.
+MEDIUM: likely the same main code, but they might add or drop one.
+LOW: the belief is only implied, the passage is ambiguous, or the choice between codes is close. LOW cases all go to human review, which is what the rating is for.

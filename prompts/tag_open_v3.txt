@@ -1,0 +1,39 @@
+Step 4: open coding.
+
+<passage>
+<<PASSAGE>>
+</passage>
+
+Record what this passage says about suffering, in two separate lists.
+
+"beliefs" holds stated beliefs: general claims about suffering that the author, the narrator or a speaker in the passage actually puts into words. The test is the evidence. You must be able to quote one continuous stretch of the passage in which the general claim itself is made. A sentence about what happened to a particular person or character is not such a stretch, however much it suggests.
+
+"depicted" holds depicted themes: what a story, poem or anecdote shows about suffering through what happens, when no one in it says so. These are your reading of the passage. They are kept apart from the stated beliefs and reviewed by the research team. Record a theme only when the passage itself makes the link, presenting someone's suffering as following from something or leading to something. Give at most three, the ones the passage shows most clearly. Writing that teaches or argues directly (essays, talks, scripture) rarely has any.
+
+There is no code list and no list of topics at this stage. The project is building its classification from what the texts say, so describe each belief or theme in its own terms and do not fit it to categories you expect to find. One of a kind nobody anticipated is as welcome as a familiar one.
+
+This passage has not been pre-selected. Either list may be empty, and for many passages both are. Do not stretch a passage to fill them. Include only what is about suffering as defined in your instructions; a general teaching on some other subject does not belong here, however wise.
+
+Respond with one JSON object, fields in this order:
+{"beliefs": [{"evidence": "...", "definition": "...", "label": "...", "stance": "endorses"|"denies"|"mentions"|"conditional"}], "depicted": [{"evidence": "...", "definition": "...", "label": "..."}], "confidence": "HIGH"|"MEDIUM"|"LOW"}
+
+beliefs: one entry for each distinct stated belief that passes the five tests. Two claims are distinct beliefs when the same person could agree with one and disagree with the other. Otherwise they are one belief and are listed once. A restatement or elaboration of a belief already listed is not a second belief.
+
+depicted: one entry for each theme, with the same fields except stance. Do not repeat here anything already listed under beliefs.
+
+evidence: one continuous stretch of the passage, copied exactly (fillers, speaker labels and all), at most 40 words. Do not join separate parts with an ellipsis. For a belief, it is the words in which the general claim is made. For a theme, it is the part of the passage that shows it.
+
+definition: the belief or theme as one short sentence in everyday words, where possible beginning "Suffering", that a survey respondent of any religion or none could agree or disagree with. Keep it general: leave out names, settings, doctrine and anything else particular to this passage.
+
+label: two to four plain words naming it, as general as the definition. The same belief met in a different passage should receive the same label, so prefer the most ordinary wording.
+
+stance (beliefs only): how the passage stands toward the belief.
+"endorses": the passage puts the belief forward as true.
+"denies": the passage explicitly rejects the belief. State the belief in its positive form, as someone who holds it would put it, and let the stance carry the rejection. For a passage saying pain is not a punishment, the definition is "Suffering is a punishment for wrongdoing.", the label is "punishment" and the stance is "denies". Do not put the negation in the definition or the label ("Suffering is not a punishment").
+"mentions": the passage reports the belief as something people say or hold, such as a common saying or a view attributed to others, without taking a side.
+"conditional": the passage holds the belief only in some circumstances or with a stated qualification. Put the condition in the definition.
+
+confidence: how likely an independent trained coder, reading only this passage, would produce the same two lists.
+HIGH: very likely the same.
+MEDIUM: likely the same main entries, but they might add or drop one.
+LOW: the passage is ambiguous, it is unclear whether something is stated or only shown, or it is unclear whether the claims are one belief or several. LOW cases all go to human review, which is what the rating is for.

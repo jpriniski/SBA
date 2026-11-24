@@ -3,24 +3,38 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from seed_topics import SEED_TOPICS, DOMAIN_LABELS
+try:
+    from seed_topics import SEED_TOPICS, DOMAIN_LABELS
+    SEED_TOPICS_LOADED = True
+except ImportError:
+    # seed_topics.py (the seed words for the nine construct dimensions) is not in
+    # the repo. Without it the pipeline still runs; `seed_constructs` is left blank.
+    SEED_TOPICS, DOMAIN_LABELS = [], []
+    SEED_TOPICS_LOADED = False
 
-# Protocol §4 tier 1–2 keywords (stemmed where marked with *)
+# Protocol §4 tier 1–2 keywords: (label, regex for the word forms that count).
+# Protocol §4 calls for case-insensitive stemmed patterns. v1 stemmed only
+# "suffer" and "pain", so inflected forms such as "tormented", "miserable" and
+# "hardships" were missed, and "pain" + any suffix also matched "painted".
+# The labels are unchanged, so the archive's `keyword` column stays comparable.
+# Bump KEYWORDS_VERSION whenever a pattern changes; it is written to run_log.json.
+KEYWORDS_VERSION = "keywords_v2"
+
 TIER1 = [
-    ("suffer",    True),   # stemmed: suffer, suffers, suffering, suffered
-    ("pain",      True),
-    ("hardship",  False),
-    ("adversity", False),
+    ("suffer",    r"suffer\w*"),                    # suffer, suffers, suffering, suffered, sufferer
+    ("pain",      r"pain(?:s|ed|ful|fully)?"),      # not paint, painted, painter
+    ("hardship",  r"hardships?"),
+    ("adversity", r"adversit(?:y|ies)"),
 ]
 TIER2 = [
-    ("affliction",  False),
-    ("misery",      False),
-    ("anguish",     False),
-    ("agony",       False),
-    ("torment",     False),
-    ("tribulation", False),
-    ("ordeal",      False),
-    ("distress",    False),
+    ("affliction",  r"afflict\w*"),                 # afflict, afflicted, affliction(s)
+    ("misery",      r"miser(?:y|ies|able|ably)"),   # not miser, miserly
+    ("anguish",     r"anguish\w*"),                 # anguish, anguished
+    ("agony",       r"agon(?:y|ies|i[sz](?:e|ed|es|ing))"),  # agony, agonies, agonize(d), agonizing; not agonist
+    ("torment",     r"torment\w*"),                 # torment(s), tormented, tormentor
+    ("tribulation", r"tribulations?"),
+    ("ordeal",      r"ordeals?"),
+    ("distress",    r"distress\w*"),                # distress, distressed, distressing
 ]
 
 # Seed word → construct name lookup (secondary annotation only)
@@ -30,13 +44,12 @@ for construct_words, construct_name in zip(SEED_TOPICS, DOMAIN_LABELS):
         SEED_WORD_TO_CONSTRUCT[word.lower()] = construct_name
 
 
-def _pattern(word, stemmed):
-    stem = re.escape(word)
-    return re.compile(r'\b' + stem + (r'\w*' if stemmed else r'') + r'\b', re.IGNORECASE)
+def _pattern(forms):
+    return re.compile(r'\b(?:' + forms + r')\b', re.IGNORECASE)
 
 
-TIER1_PATTERNS = [(_pattern(w, s), w, 1) for w, s in TIER1]
-TIER2_PATTERNS = [(_pattern(w, s), w, 2) for w, s in TIER2]
+TIER1_PATTERNS = [(_pattern(f), w, 1) for w, f in TIER1]
+TIER2_PATTERNS = [(_pattern(f), w, 2) for w, f in TIER2]
 ALL_PATTERNS   = TIER1_PATTERNS + TIER2_PATTERNS
 
 
